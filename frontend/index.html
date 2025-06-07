@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCP Fetch 本地测试界面</title>
+    <title>MCP Fetch Testing Interface</title>
     <style>
         * {
             margin: 0;
@@ -187,7 +187,7 @@
             border-radius: 15px;
             padding: 25px;
             border: 1px solid #e9ecef;
-            max-height: 600px;
+            max-height: 800px;
             overflow-y: auto;
         }
 
@@ -305,7 +305,7 @@
             font-size: 12px;
         }
 
-        /* 处理步骤样式 */
+        /* Processing steps styles */
         .processing-steps {
             padding: 0;
         }
@@ -438,7 +438,7 @@
             color: #333;
         }
 
-        /* 联系信息显示样式 */
+        /* Contact information display styles */
         .contact-info-display {
             background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
             border-radius: 12px;
@@ -587,6 +587,43 @@
             font-size: 16px;
         }
 
+        /* MCP Raw Data Display */
+        .mcp-raw-section {
+            background: #fff8e1;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+        }
+
+        .mcp-raw-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .mcp-raw-header h5 {
+            margin: 0;
+            color: #f57c00;
+            font-size: 18px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .mcp-raw-content {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ffc107;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -611,97 +648,97 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚀 MCP Fetch 测试工具</h1>
-            <p>本地前端界面 - 连接后端 API 进行内容获取测试</p>
+            <h1>🚀 MCP Fetch Testing Tool</h1>
+            <p>Local Frontend Interface - Connect to Backend API for Content Fetching Tests</p>
         </div>
 
         <div class="main-content">
-            <!-- 状态检查区域 -->
+            <!-- Server Status Section -->
             <div class="section">
-                <h2>🔍 服务器状态</h2>
+                <h2>🔍 Server Status</h2>
                 <div class="status-bar">
                     <div>
                         <span class="status-indicator status-checking" id="statusIndicator"></span>
-                        <span id="statusText">检查中...</span>
+                        <span id="statusText">Checking...</span>
                     </div>
-                    <button class="btn btn-secondary" onclick="checkServerStatus()">刷新状态</button>
+                    <button class="btn btn-secondary" onclick="checkServerStatus()">Refresh Status</button>
                 </div>
                 
                 <div class="quick-tests">
-                    <button class="btn btn-success" onclick="checkStatus()">检查状态</button>
-                    <button class="btn btn-success" onclick="checkDomains()">查看域名</button>
-                    <button class="btn btn-warning" onclick="testConnectivity()">连接测试</button>
-                    <button class="btn btn-contact-test" onclick="testContactDetection()">联系信息测试</button>
-                    <button class="btn btn-contact-test" onclick="testRealContactPage()" style="background: linear-gradient(45deg, #4caf50, #2196f3);">真实联系页面</button>
+                    <button class="btn btn-success" onclick="checkStatus()">Check Status</button>
+                    <button class="btn btn-success" onclick="checkDomains()">View Domains</button>
+                    <button class="btn btn-warning" onclick="testConnectivity()">Connection Test</button>
+                    <button class="btn btn-contact-test" onclick="testContactDetection()">Contact Info Test</button>
+                    <button class="btn btn-contact-test" onclick="testRealContactPage()" style="background: linear-gradient(45deg, #4caf50, #2196f3);">Real Contact Page</button>
                 </div>
             </div>
 
-            <!-- 内容获取测试区域 -->
+            <!-- Content Fetch Testing Section -->
             <div class="section">
-                <h2>📄 内容获取测试</h2>
+                <h2>📄 Content Fetch Testing</h2>
                 
                 <div class="form-group">
-                    <label for="testUrl">测试 URL:</label>
+                    <label for="testUrl">Test URL:</label>
                     <input type="url" id="testUrl" placeholder="https://example.com" value="https://example.com">
                 </div>
 
                 <div class="form-group">
-                    <label for="testQuestion">问题:</label>
-                    <textarea id="testQuestion" placeholder="输入你想问的问题...">这个网站是关于什么的？</textarea>
+                    <label for="testQuestion">Question:</label>
+                    <textarea id="testQuestion" placeholder="Enter your question...">What is this website about?</textarea>
                 </div>
 
                 <button class="btn" onclick="testFetch()" id="fetchBtn">
-                    📡 获取内容
+                    📡 Fetch Content
                 </button>
-                <button class="btn btn-secondary" onclick="fillRandomTest()">🎲 随机测试</button>
+                <button class="btn btn-secondary" onclick="fillRandomTest()">🎲 Random Test</button>
 
-                <!-- 预设测试 -->
-                <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">快速测试</h3>
+                <!-- Preset Tests -->
+                <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">Quick Tests</h3>
                 <div class="preset-urls">
-                    <div class="preset-item" onclick="usePreset('https://example.com', '这个网站的主要内容是什么？')">
+                    <div class="preset-item" onclick="usePreset('https://example.com', 'What is the main content of this website?')">
                         <strong>Example.com</strong><br>
-                        <small>基础测试网站</small>
+                        <small>Basic test website</small>
                     </div>
-                    <div class="preset-item" onclick="usePreset('https://en.wikipedia.org/wiki/Artificial_intelligence', '什么是人工智能？')">
+                    <div class="preset-item" onclick="usePreset('https://en.wikipedia.org/wiki/Artificial_intelligence', 'What is artificial intelligence?')">
                         <strong>Wikipedia AI</strong><br>
-                        <small>人工智能相关内容</small>
+                        <small>AI related content</small>
                     </div>
-                    <div class="preset-item" onclick="usePreset('https://github.com/microsoft/vscode', '这个项目是做什么的？')">
+                    <div class="preset-item" onclick="usePreset('https://github.com/microsoft/vscode', 'What does this project do?')">
                         <strong>GitHub VSCode</strong><br>
-                        <small>开源项目信息</small>
+                        <small>Open source project info</small>
                     </div>
-                    <div class="preset-item" onclick="usePreset('https://stackoverflow.com/questions/tagged/javascript', 'JavaScript相关的热门问题有哪些？')">
+                    <div class="preset-item" onclick="usePreset('https://stackoverflow.com/questions/tagged/javascript', 'What are the popular JavaScript questions?')">
                         <strong>StackOverflow</strong><br>
-                        <small>编程问答网站</small>
+                        <small>Programming Q&A site</small>
                     </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/microsoft/vscode', '如何联系这个项目的维护者？')">
-                        <strong>🧪 GitHub 联系方式</strong><br>
-                        <small>测试开源项目联系信息</small>
+                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/microsoft/vscode', 'How to contact the project maintainers?')">
+                        <strong>🧪 GitHub Contact Test</strong><br>
+                        <small>Test contact info extraction</small>
                     </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://stackoverflow.com/contact', '网站的联系方式是什么？')">
-                        <strong>🧪 StackOverflow 联系页面</strong><br>
-                        <small>真实联系信息页面测试</small>
+                    <div class="preset-item contact-test" onclick="usePreset('https://stackoverflow.com/contact', 'What are the contact methods for this website?')">
+                        <strong>🧪 StackOverflow Contact Page</strong><br>
+                        <small>Real contact info page test</small>
                     </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/contact', '如何联系GitHub支持团队？')">
-                        <strong>🧪 GitHub 官方联系</strong><br>
-                        <small>官方联系信息测试</small>
+                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/contact', 'How to contact GitHub support team?')">
+                        <strong>🧪 GitHub Official Contact</strong><br>
+                        <small>Official contact info test</small>
                     </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://bbc.com/news/help/default/contact_us/questions', 'BBC的联系方式有哪些？')">
-                        <strong>🧪 BBC 联系页面</strong><br>
-                        <small>媒体机构联系信息</small>
+                    <div class="preset-item contact-test" onclick="usePreset('https://bbc.com/news/help/default/contact_us/questions', 'What are BBC contact methods?')">
+                        <strong>🧪 BBC Contact Page</strong><br>
+                        <small>Media organization contact info</small>
                     </div>
                 </div>
             </div>
 
-            <!-- 结果显示区域 -->
+            <!-- Results Display Area -->
             <div class="results-area">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2>📋 测试结果</h2>
-                    <button class="btn clear-btn" onclick="clearResults()">清空结果</button>
+                    <h2>📋 Test Results</h2>
+                    <button class="btn clear-btn" onclick="clearResults()">Clear Results</button>
                 </div>
                 <div id="resultsContainer">
                     <div style="text-align: center; color: #6c757d; padding: 40px;">
-                        暂无测试结果，点击上方按钮开始测试
+                        No test results yet, click the buttons above to start testing
                     </div>
                 </div>
             </div>
@@ -712,18 +749,18 @@
         const API_BASE = 'http://localhost:3001/api';
         let testCounter = 0;
 
-        // 页面加载时自动检查服务器状态
+        // Auto-check server status on page load
         window.addEventListener('load', function() {
             checkServerStatus();
         });
 
-        // 检查服务器连接状态
+        // Check server connection status
         async function checkServerStatus() {
             const indicator = document.getElementById('statusIndicator');
             const text = document.getElementById('statusText');
             
             indicator.className = 'status-indicator status-checking';
-            text.textContent = '检查中...';
+            text.textContent = 'Checking...';
 
             try {
                 const response = await fetch(`${API_BASE}/status`, { 
@@ -733,20 +770,39 @@
                 
                 if (response.ok) {
                     indicator.className = 'status-indicator status-online';
-                    text.textContent = '服务器在线 ✅';
+                    text.textContent = 'Server Online ✅';
                 } else {
                     throw new Error(`HTTP ${response.status}`);
                 }
             } catch (error) {
                 indicator.className = 'status-indicator status-offline';
-                text.textContent = '服务器离线 ❌';
+                text.textContent = 'Server Offline ❌';
             }
         }
 
-        // 生成联系信息显示HTML
+        // Generate MCP raw data display
+        function generateMCPRawDisplay(rawContent, metadata) {
+            if (!rawContent) {
+                return `<div class="contact-empty">No MCP raw content available</div>`;
+            }
+
+            return `
+                <div class="mcp-raw-section">
+                    <div class="mcp-raw-header">
+                        <span class="contact-section-icon">🔧</span>
+                        <h5>MCP Raw Data (${metadata.mcpUsed ? 'MCP Fetch' : 'Fallback Fetch'})</h5>
+                    </div>
+                    <div class="mcp-raw-content">
+                        ${rawContent.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Generate contact info display HTML
         function generateContactInfoDisplay(contactInfo, metadata) {
             if (!contactInfo) {
-                return `<div class="contact-empty">未检测到联系信息</div>`;
+                return `<div class="contact-empty">No contact information detected</div>`;
             }
 
             const hasEmails = contactInfo.emails && contactInfo.emails.length > 0;
@@ -754,31 +810,31 @@
             const hasOther = contactInfo.other && contactInfo.other.length > 0;
 
             if (!hasEmails && !hasPhones && !hasOther) {
-                return `<div class="contact-empty">未找到有效的联系信息</div>`;
+                return `<div class="contact-empty">No valid contact information found</div>`;
             }
 
             let html = `
                 <div class="contact-info-display">
                     <div class="contact-info-header">
                         <span class="contact-section-icon">📞</span>
-                        <h5>提取到的联系信息</h5>
-                        <span class="contact-info-status">${metadata.contactEnhanced ? '已增强分析' : '仅供参考'}</span>
+                        <h5>Extracted Contact Information</h5>
+                        <span class="contact-info-status">${metadata.contactEnhanced ? 'Enhanced Analysis' : 'Reference Only'}</span>
                     </div>
             `;
 
-            // 邮箱地址
+            // Email addresses
             if (hasEmails) {
                 html += `
                     <div class="contact-section">
                         <div class="contact-section-title">
                             <span class="contact-section-icon">📧</span>
-                            邮箱地址 (${contactInfo.emails.length}个)
+                            Email Addresses (${contactInfo.emails.length})
                         </div>
                         <div class="contact-items">
                             ${contactInfo.emails.map(email => `
                                 <div class="contact-item">
                                     <span class="contact-item-text">${email}</span>
-                                    <button class="contact-item-copy" onclick="copyToClipboard('${email}')">复制</button>
+                                    <button class="contact-item-copy" onclick="copyToClipboard('${email}')">Copy</button>
                                 </div>
                             `).join('')}
                         </div>
@@ -786,19 +842,19 @@
                 `;
             }
 
-            // 电话号码
+            // Phone numbers
             if (hasPhones) {
                 html += `
                     <div class="contact-section">
                         <div class="contact-section-title">
                             <span class="contact-section-icon">📞</span>
-                            电话号码 (${contactInfo.phones.length}个)
+                            Phone Numbers (${contactInfo.phones.length})
                         </div>
                         <div class="contact-items">
                             ${contactInfo.phones.map(phone => `
                                 <div class="contact-item">
                                     <span class="contact-item-text">${phone}</span>
-                                    <button class="contact-item-copy" onclick="copyToClipboard('${phone}')">复制</button>
+                                    <button class="contact-item-copy" onclick="copyToClipboard('${phone}')">Copy</button>
                                 </div>
                             `).join('')}
                         </div>
@@ -806,19 +862,19 @@
                 `;
             }
 
-            // 其他联系信息
+            // Other contact info
             if (hasOther) {
                 html += `
                     <div class="contact-section">
                         <div class="contact-section-title">
                             <span class="contact-section-icon">📝</span>
-                            其他联系信息 (${contactInfo.other.length}条)
+                            Other Contact Info (${contactInfo.other.length})
                         </div>
                         <div class="contact-items">
                             ${contactInfo.other.map(info => `
                                 <div class="contact-item">
                                     <span class="contact-item-text">${info.trim()}</span>
-                                    <button class="contact-item-copy" onclick="copyToClipboard('${info.trim()}')">复制</button>
+                                    <button class="contact-item-copy" onclick="copyToClipboard('${info.trim()}')">Copy</button>
                                 </div>
                             `).join('')}
                         </div>
@@ -826,13 +882,13 @@
                 `;
             }
 
-            // 增强通知
+            // Enhancement notice
             html += `
                 <div class="contact-enhancement-notice ${metadata.contactEnhanced ? 'enhanced' : ''}">
                     <span class="icon">${metadata.contactEnhanced ? '✅' : '💡'}</span>
                     ${metadata.contactEnhanced 
-                        ? '这些联系信息已被用于增强LLM分析，提供更准确的回答。'
-                        : '这些联系信息仅供参考，如需详细分析请询问具体的联系方式问题。'
+                        ? 'This contact information was used to enhance LLM analysis for more accurate responses.'
+                        : 'This contact information is for reference only. Ask specific contact questions for detailed analysis.'
                     }
                 </div>
             `;
@@ -841,13 +897,13 @@
             return html;
         }
 
-        // 复制到剪贴板
+        // Copy to clipboard
         function copyToClipboard(text) {
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text).then(() => {
                     showCopySuccess();
                 }).catch(err => {
-                    console.error('复制失败:', err);
+                    console.error('Copy failed:', err);
                     fallbackCopyTextToClipboard(text);
                 });
             } else {
@@ -869,16 +925,16 @@
                 document.execCommand('copy');
                 showCopySuccess();
             } catch (err) {
-                console.error('复制失败:', err);
+                console.error('Copy failed:', err);
             }
             
             document.body.removeChild(textArea);
         }
 
         function showCopySuccess() {
-            // 创建临时提示
+            // Create temporary toast notification
             const toast = document.createElement('div');
-            toast.textContent = '✅ 已复制到剪贴板';
+            toast.textContent = '✅ Copied to clipboard';
             toast.style.cssText = `
                 position: fixed;
                 top: 20px;
@@ -905,12 +961,12 @@
             }, 2000);
         }
 
-        // 添加结果到界面
+        // Add result to interface
         function addResult(title, data, isError = false, processingTime = null) {
             testCounter++;
             const container = document.getElementById('resultsContainer');
             
-            // 清空提示文字
+            // Clear placeholder text
             if (container.children.length === 1 && container.firstElementChild.style.textAlign === 'center') {
                 container.innerHTML = '';
             }
@@ -923,33 +979,33 @@
             
             let contentHtml = '';
             
-            // 检查是否是内容获取的响应，如果是则分别显示 MCP 和 LLM 结果
+            // Check if this is a content fetch response, if so display MCP and LLM results separately
             if (data && data.success && data.data && data.data.answer && data.data.metadata) {
                 const metadata = data.data.metadata;
                 
                 contentHtml = `
                     <div class="processing-steps">
                         <div class="step-section">
-                            <h4 class="step-title">${metadata.mcpUsed ? '📡 MCP Fetch 原始结果' : '🔄 Fallback Fetch 原始结果'}</h4>
+                            <h4 class="step-title">${metadata.mcpUsed ? '📡 MCP Fetch Raw Results' : '🔄 Fallback Fetch Raw Results'}</h4>
                             <div class="step-content">
                                 <div class="step-meta">
-                                    <span class="meta-item">${metadata.mcpUsed ? '✅ MCP 获取成功' : '🔄 备用方案获取'}</span>
-                                    <span class="meta-item">📄 内容长度: ${metadata.contentLength} 字符</span>
+                                    <span class="meta-item">${metadata.mcpUsed ? '✅ MCP Success' : '🔄 Fallback Used'}</span>
+                                    <span class="meta-item">📄 Content Length: ${metadata.contentLength} chars</span>
                                     <span class="meta-item">🌐 URL: ${data.data.url}</span>
-                                    <span class="meta-item">🔧 数据源: ${metadata.source || (metadata.mcpUsed ? 'MCP Fetch' : 'Fallback Fetch')}</span>
+                                    <span class="meta-item">🔧 Data Source: ${metadata.source || (metadata.mcpUsed ? 'MCP Fetch' : 'Fallback Fetch')}</span>
                                 </div>
                                 <div class="raw-content">
                                     <details>
-                                        <summary>查看获取的原始内容 (点击展开)</summary>
+                                        <summary>View Raw Fetched Content (Click to expand)</summary>
                                         <div class="content-preview">
-                                            <p><strong>注意：</strong>这是${metadata.mcpUsed ? 'MCP fetch 工具' : '备用 fetch 方案'}从网页提取的${metadata.mcpUsed ? 'Markdown' : '纯文本'}格式内容，已去除 HTML 标签和噪音。</p>
+                                            <p><strong>Note:</strong> This is the ${metadata.mcpUsed ? 'Markdown' : 'plain text'} format content extracted by ${metadata.mcpUsed ? 'MCP fetch tool' : 'fallback fetch method'}, with HTML tags and noise removed.</p>
                                             <div class="mock-mcp-content">
                                                 ${data.data.rawContent ? 
-                                                    data.data.rawContent.substring(0, 1000).replace(/\n/g, '<br>') + (data.data.rawContent.length > 1000 ? '<br><br><em>[内容过长，仅显示前1000字符]</em>' : '') :
-                                                    `<p>🔧 ${metadata.mcpUsed ? 'MCP fetch 工具' : '备用 fetch 方案'}已将网页转换为结构化格式</p>
-                                                     <p>📊 处理了 ${metadata.contentLength} 字符的内容</p>
-                                                     <p>🧹 自动过滤了广告、导航栏等无关内容</p>
-                                                     <p>📝 保留了文章主体、表格、链接等核心信息</p>`
+                                                    data.data.rawContent.substring(0, 1000).replace(/\n/g, '<br>') + (data.data.rawContent.length > 1000 ? '<br><br><em>[Content too long, showing first 1000 characters]</em>' : '') :
+                                                    `<p>🔧 ${metadata.mcpUsed ? 'MCP fetch tool' : 'Fallback fetch method'} converted webpage to structured format</p>
+                                                     <p>📊 Processed ${metadata.contentLength} characters of content</p>
+                                                     <p>🧹 Auto-filtered ads, navigation bars and irrelevant content</p>
+                                                     <p>📝 Preserved main article body, tables, links and core information</p>`
                                                 }
                                             </div>
                                         </details>
@@ -958,15 +1014,17 @@
                             </div>
                         </div>
                         
+                        ${generateMCPRawDisplay(data.data.rawContent, metadata)}
+                        
                         ${data.data.contactInfo && metadata.contactInfoFound ? `
                         <div class="step-divider">⬇️</div>
                         
                         <div class="step-section">
-                            <h4 class="step-title">📞 联系信息提取结果</h4>
+                            <h4 class="step-title">📞 Contact Information Extraction Results</h4>
                             <div class="step-content">
                                 <div class="step-meta">
-                                    <span class="meta-item">${metadata.contactEnhanced ? '✅ 已应用到LLM分析' : '📋 仅供参考'}</span>
-                                    <span class="meta-item">🔍 询问类型: ${metadata.isContactQuestion ? '联系方式询问' : '常规询问'}</span>
+                                    <span class="meta-item">${metadata.contactEnhanced ? '✅ Applied to LLM Analysis' : '📋 Reference Only'}</span>
+                                    <span class="meta-item">🔍 Query Type: ${metadata.isContactQuestion ? 'Contact Question' : 'Regular Question'}</span>
                                 </div>
                                 ${generateContactInfoDisplay(data.data.contactInfo, metadata)}
                             </div>
@@ -976,11 +1034,11 @@
                         <div class="step-divider">⬇️</div>
                         
                         <div class="step-section">
-                            <h4 class="step-title">🤖 LLM 智能分析结果</h4>
+                            <h4 class="step-title">🤖 LLM Intelligent Analysis Results</h4>
                             <div class="step-content">
                                 <div class="step-meta">
-                                    <span class="meta-item">🎯 问题: "${data.data.question}"</span>
-                                    <span class="meta-item">📝 回答长度: ${data.data.answer.length} 字符</span>
+                                    <span class="meta-item">🎯 Question: "${data.data.question}"</span>
+                                    <span class="meta-item">📝 Answer Length: ${data.data.answer.length} chars</span>
                                 </div>
                                 <div class="llm-answer">
                                     <div class="answer-text">${data.data.answer}</div>
@@ -991,27 +1049,27 @@
                         <div class="step-divider">⬇️</div>
                         
                         <div class="step-section">
-                            <h4 class="step-title">📊 处理统计</h4>
+                            <h4 class="step-title">📊 Processing Statistics</h4>
                             <div class="step-content">
                                 <div class="stats-grid">
                                     <div class="stat-item">
-                                        <span class="stat-label">总处理时间</span>
+                                        <span class="stat-label">Total Processing Time</span>
                                         <span class="stat-value">${processingTime || metadata.processingTime}ms</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span class="stat-label">内容压缩比</span>
+                                        <span class="stat-label">Content Compression</span>
                                         <span class="stat-value">${Math.round((data.data.answer.length / metadata.contentLength) * 100)}%</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span class="stat-label">联系信息检测</span>
-                                        <span class="stat-value">${metadata.contactInfoFound ? '✅ 已提取' : '❌ 未找到'}</span>
+                                        <span class="stat-label">Contact Detection</span>
+                                        <span class="stat-value">${metadata.contactInfoFound ? '✅ Extracted' : '❌ Not Found'}</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span class="stat-label">增强分析</span>
-                                        <span class="stat-value">${metadata.contactEnhanced ? '✅ 已应用' : '❌ 未应用'}</span>
+                                        <span class="stat-label">Enhanced Analysis</span>
+                                        <span class="stat-value">${metadata.contactEnhanced ? '✅ Applied' : '❌ Not Applied'}</span>
                                     </div>
                                     <div class="stat-item">
-                                        <span class="stat-label">处理时间</span>
+                                        <span class="stat-label">Processing Time</span>
                                         <span class="stat-value">${metadata.timestamp ? new Date(metadata.timestamp).toLocaleString() : timeStr}</span>
                                     </div>
                                 </div>
@@ -1020,7 +1078,7 @@
                     </div>
                 `;
             } else {
-                // 其他类型的结果（状态检查、错误等）
+                // Other types of results (status checks, errors, etc.)
                 contentHtml = `<div class="result-content">${JSON.stringify(data, null, 2)}</div>`;
             }
             
@@ -1034,13 +1092,13 @@
             
             container.insertBefore(resultDiv, container.firstChild);
             
-            // 限制结果数量
+            // Limit number of results displayed
             if (container.children.length > 5) {
                 container.removeChild(container.lastChild);
             }
         }
 
-        // 通用 API 请求函数
+        // Generic API request function
         async function makeRequest(endpoint, options = {}) {
             const startTime = Date.now();
             try {
@@ -1062,76 +1120,76 @@
             }
         }
 
-        // 测试连接
+        // Test connectivity
         async function testConnectivity() {
             try {
                 const { data, processingTime } = await makeRequest('/status');
-                addResult('连接测试', { 
-                    status: '连接成功',
+                addResult('Connection Test', { 
+                    status: 'Connection successful',
                     serverStatus: data.status,
-                    uptime: data.uptime + '秒'
+                    uptime: data.uptime + ' seconds'
                 }, false, processingTime);
             } catch (error) {
-                addResult('连接测试', { 
-                    status: '连接失败',
+                addResult('Connection Test', { 
+                    status: 'Connection failed',
                     error: error.message 
                 }, true, error.processingTime);
             }
         }
 
-        // 检查状态
+        // Check status
         async function checkStatus() {
             try {
                 const { data, processingTime } = await makeRequest('/status');
-                addResult('状态检查', data, false, processingTime);
+                addResult('Status Check', data, false, processingTime);
             } catch (error) {
-                addResult('状态检查', { error: error.message }, true, error.processingTime);
+                addResult('Status Check', { error: error.message }, true, error.processingTime);
             }
         }
 
-        // 检查域名列表
+        // Check domain list
         async function checkDomains() {
             try {
                 const { data, processingTime } = await makeRequest('/domains');
-                addResult('域名列表', data, false, processingTime);
+                addResult('Domain List', data, false, processingTime);
             } catch (error) {
-                addResult('域名列表', { error: error.message }, true, error.processingTime);
+                addResult('Domain List', { error: error.message }, true, error.processingTime);
             }
         }
 
-        // 检查联系信息功能
+        // Check contact info functionality
         async function testContactDetection() {
-            // 使用多个测试用例来展示联系信息检测
+            // Use multiple test cases to demonstrate contact info detection
             const testCases = [
                 {
                     url: 'https://stackoverflow.com/contact',
-                    question: '网站的联系方式是什么？',
-                    description: 'StackOverflow 联系页面'
+                    question: 'What are the contact methods for this website?',
+                    description: 'StackOverflow Contact Page'
                 },
                 {
                     url: 'https://github.com/contact',
-                    question: '如何联系GitHub支持团队？',
-                    description: 'GitHub 官方联系'
+                    question: 'How to contact GitHub support team?',
+                    description: 'GitHub Official Contact'
                 },
                 {
                     url: 'https://example.com',
-                    question: '这个网站的联系方式是什么？',
-                    description: 'Example.com (可能无联系信息)'
+                    question: 'What are the contact methods for this website?',
+                    description: 'Example.com (likely no contact info)'
                 }
             ];
 
             const btn = document.getElementById('fetchBtn');
             const originalText = btn.innerHTML;
             
-            // 随机选择一个测试用例
+            // Randomly select a test case
             const testData = testCases[Math.floor(Math.random() * testCases.length)];
             
-            // 填充测试数据
+            // Fill test data
             document.getElementById('testUrl').value = testData.url;
             document.getElementById('testQuestion').value = testData.question;
             
             btn.disabled = true;
-            btn.innerHTML = '<span class="loading"><span class="spinner"></span>测试联系信息检测...</span>';
+            btn.innerHTML = '<span class="loading"><span class="spinner"></span>Testing contact info detection...</span>';
 
             try {
                 const { data, processingTime } = await makeRequest('/ask', {
@@ -1142,42 +1200,42 @@
                     })
                 });
 
-                addResult(`联系信息检测测试: ${testData.description}`, data, !data.success, processingTime);
+                addResult(`Contact Info Detection Test: ${testData.description}`, data, !data.success, processingTime);
             } catch (error) {
-                addResult('联系信息检测测试', { error: error.message }, true, error.processingTime);
+                addResult('Contact Info Detection Test', { error: error.message }, true, error.processingTime);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
         }
 
-        // 专门测试真实联系信息页面
+        // Test real contact page specifically
         async function testRealContactPage() {
             const testData = {
                 url: 'https://stackoverflow.com/contact',
-                question: '这个页面上有哪些联系方式？请详细列出所有联系信息。'
+                question: 'What contact methods are available on this page? Please list all contact information in detail.'
             };
 
             document.getElementById('testUrl').value = testData.url;
             document.getElementById('testQuestion').value = testData.question;
             
-            // 自动触发测试
+            // Auto-trigger test
             await testFetch();
         }
 
-        // 内容获取测试
+        // Content fetch test
         async function testFetch() {
             const url = document.getElementById('testUrl').value.trim();
             const question = document.getElementById('testQuestion').value.trim();
             const btn = document.getElementById('fetchBtn');
 
             if (!url || !question) {
-                addResult('输入验证', { error: 'URL 和问题都是必需的' }, true);
+                addResult('Input Validation', { error: 'Both URL and question are required' }, true);
                 return;
             }
 
             btn.disabled = true;
-            btn.innerHTML = '<span class="loading"><span class="spinner"></span>处理中...</span>';
+            btn.innerHTML = '<span class="loading"><span class="spinner"></span>Processing...</span>';
 
             try {
                 const { data, processingTime } = await makeRequest('/ask', {
@@ -1185,28 +1243,28 @@
                     body: JSON.stringify({ url, question })
                 });
 
-                addResult(`内容获取: ${new URL(url).hostname}`, data, !data.success, processingTime);
+                addResult(`Content Fetch: ${new URL(url).hostname}`, data, !data.success, processingTime);
             } catch (error) {
-                addResult('内容获取', { error: error.message }, true, error.processingTime);
+                addResult('Content Fetch', { error: error.message }, true, error.processingTime);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '📡 获取内容';
+                btn.innerHTML = '📡 Fetch Content';
             }
         }
 
-        // 使用预设
+        // Use preset
         function usePreset(url, question) {
             document.getElementById('testUrl').value = url;
             document.getElementById('testQuestion').value = question;
             
-            // 高亮选中的预设
+            // Highlight selected preset
             document.querySelectorAll('.preset-item').forEach(item => {
                 item.classList.remove('selected');
             });
             event.target.closest('.preset-item').classList.add('selected');
         }
 
-        // 填充随机测试
+        // Fill random test
         function fillRandomTest() {
             const urls = [
                 'https://example.com',
@@ -1216,10 +1274,10 @@
             ];
             
             const questions = [
-                '这个网站的主要内容是什么？',
-                '网站上有哪些重要信息？',
-                '这个页面讲的是什么主题？',
-                '总结一下这个网页的核心内容'
+                'What is the main content of this website?',
+                'What important information is on this website?',
+                'What topic does this page discuss?',
+                'Summarize the core content of this webpage'
             ];
 
             const randomUrl = urls[Math.floor(Math.random() * urls.length)];
@@ -1229,18 +1287,18 @@
             document.getElementById('testQuestion').value = randomQuestion;
         }
 
-        // 清空结果
+        // Clear results
         function clearResults() {
             const container = document.getElementById('resultsContainer');
             container.innerHTML = `
                 <div style="text-align: center; color: #6c757d; padding: 40px;">
-                    结果已清空，点击上方按钮开始新的测试
+                    Results cleared, click the buttons above to start new tests
                 </div>
             `;
             testCounter = 0;
         }
 
-        // 键盘快捷键
+        // Keyboard shortcuts
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'Enter') {
                 testFetch();

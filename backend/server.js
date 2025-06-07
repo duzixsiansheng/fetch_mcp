@@ -9,9 +9,9 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-console.log('🔧 正在初始化服务器...');
+console.log('🔧 Initializing server...');
 
-// 中间件配置
+// Middleware configuration
 app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false
@@ -29,13 +29,13 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// 请求日志中间件
+// Request logging middleware
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
 
-// URL 白名单配置
+// URL whitelist configuration
 const WHITELISTED_DOMAINS = [
   'wikipedia.org',
   'github.com',
@@ -57,7 +57,7 @@ const WHITELISTED_DOMAINS = [
   'openai.com'
 ];
 
-// 日志记录
+// Request logging function
 const logRequest = (req, type, details = {}) => {
   const logEntry = {
     timestamp: new Date().toISOString(),
@@ -69,7 +69,7 @@ const logRequest = (req, type, details = {}) => {
   console.log(`[${type}]`, JSON.stringify(logEntry, null, 2));
 };
 
-// URL 验证函数
+// URL validation function
 function validateUrl(url) {
   try {
     const urlObj = new URL(url);
@@ -97,7 +97,7 @@ function validateUrl(url) {
   }
 }
 
-// 检测问题是否询问联系方式
+// Detect if question is asking for contact information
 function isContactQuestion(question) {
   if (!question || typeof question !== 'string') {
     return false;
@@ -106,24 +106,24 @@ function isContactQuestion(question) {
   const questionLower = question.toLowerCase();
   
   const contactQuestions = [
-    '联系方式',
-    '联系信息', 
-    '如何联系',
-    '怎么联系',
-    '联系电话',
-    '联系邮箱',
-    '联系地址',
     'contact',
     'contact information',
+    'contact info', 
     'how to contact',
+    'how to reach',
+    'contact details',
     'phone number',
-    'email address'
+    'email address',
+    'phone',
+    'email',
+    'reach out',
+    'get in touch'
   ];
   
   return contactQuestions.some(pattern => questionLower.includes(pattern));
 }
 
-// 检测内容是否包含联系信息
+// Detect if content contains contact information
 function hasContactInformation(content) {
   if (!content || typeof content !== 'string') {
     return false;
@@ -139,7 +139,7 @@ function hasContactInformation(content) {
   
   const contactKeywords = [
     'contact us', 'contact information', 'get in touch',
-    '联系我们', '联系方式', '联系信息'
+    'reach out', 'phone', 'email', 'address'
   ];
   
   const hasContactKeywords = contactKeywords.some(keyword => 
@@ -149,7 +149,7 @@ function hasContactInformation(content) {
   return hasEmail || hasPhone || hasContactKeywords;
 }
 
-// 检查联系信息是否有效
+
 function hasValidContactInfo(contactInfo) {
   if (!contactInfo) return false;
   
@@ -158,7 +158,7 @@ function hasValidContactInfo(contactInfo) {
          (contactInfo.other && contactInfo.other.length > 0);
 }
 
-// 提取联系信息
+
 function extractContactInformation(content) {
   if (!content || typeof content !== 'string') {
     return null;
@@ -170,11 +170,11 @@ function extractContactInformation(content) {
     other: []
   };
   
-  // 更准确的邮箱正则表达式
+
   const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
   const emails = content.match(emailPattern);
   if (emails) {
-    // 过滤掉一些常见的非真实邮箱
+
     const validEmails = emails.filter(email => 
       !email.includes('noreply') && 
       !email.includes('example.com') && 
@@ -184,12 +184,12 @@ function extractContactInformation(content) {
     contactInfo.emails = [...new Set(validEmails)];
   }
   
-  // 更全面的电话号码匹配
+  
   const phonePatterns = [
-    /(\+?1?[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/g, // 美国格式
-    /(\+\d{1,3}[-.\s]?)?(\d{3,4}[-.\s]?\d{3,4}[-.\s]?\d{3,4})/g, // 国际格式
-    /(\d{3}[-.\s]?\d{4}[-.\s]?\d{4})/g, // 中国手机号
-    /(\d{3,4}[-.\s]?\d{7,8})/g // 中国固话
+    /(\+?1?[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/g,
+    /(\+\d{1,3}[-.\s]?)?(\d{3,4}[-.\s]?\d{3,4}[-.\s]?\d{3,4})/g, 
+    /(\d{3}[-.\s]?\d{4}[-.\s]?\d{4})/g, 
+    /(\d{3,4}[-.\s]?\d{7,8})/g 
   ];
   
   let allPhones = [];
@@ -201,7 +201,6 @@ function extractContactInformation(content) {
   });
   
   if (allPhones.length > 0) {
-    // 过滤掉明显不是电话号码的数字
     const validPhones = allPhones.filter(phone => {
       const cleanPhone = phone.replace(/\D/g, '');
       return cleanPhone.length >= 7 && cleanPhone.length <= 15;
@@ -209,7 +208,7 @@ function extractContactInformation(content) {
     contactInfo.phones = [...new Set(validPhones)];
   }
   
-  // 查找联系相关的句子
+
   const sentences = content.split(/[.!?\n]+/);
   const contactSentences = sentences.filter(sentence => {
     const sentenceLower = sentence.toLowerCase();
@@ -223,12 +222,12 @@ function extractContactInformation(content) {
            sentenceLower.includes('call') ||
            sentenceLower.includes('reach') ||
            sentenceLower.includes('mailto:')) &&
-           sentence.trim().length > 20 && // 至少20个字符
-           sentence.trim().length < 200; // 不超过200个字符
+           sentence.trim().length > 20 && 
+           sentence.trim().length < 200; 
   });
   
   if (contactSentences.length > 0) {
-    contactInfo.other = contactSentences.slice(0, 5).map(s => s.trim()); // 最多5条
+    contactInfo.other = contactSentences.slice(0, 5).map(s => s.trim()); 
   }
   
   const hasAnyContact = contactInfo.emails.length > 0 || 
@@ -238,7 +237,7 @@ function extractContactInformation(content) {
   return hasAnyContact ? contactInfo : null;
 }
 
-// 检查联系信息是否有效
+
 function hasValidContactInfo(contactInfo) {
   if (!contactInfo) return false;
   
@@ -247,16 +246,16 @@ function hasValidContactInfo(contactInfo) {
          (contactInfo.other && contactInfo.other.length > 0);
 }
 
-// 官方 MCP Fetch 工具集成
+
 async function fetchContentViaMCP(url) {
   return new Promise((resolve, reject) => {
-    console.log('🔧 使用官方 MCP fetch 服务器');
+    console.log('🔧 use official mcp');
     
     tryStdioMCP(url, resolve, reject);
   });
 }
 
-// 使用标准的 MCP stdio 协议
+
 function tryStdioMCP(url, resolve, reject) {
   const mcpProcess = spawn('uvx', ['mcp-server-fetch'], {
     stdio: ['pipe', 'pipe', 'pipe'],
@@ -276,24 +275,24 @@ function tryStdioMCP(url, resolve, reject) {
     output += chunk;
     allOutput += chunk;
     
-    console.log('📨 收到数据块:', JSON.stringify(chunk));
+    console.log('📨 receive data:', JSON.stringify(chunk));
     
     const lines = output.split('\n');
     for (let i = 0; i < lines.length - 1; i++) {
       const line = lines[i].trim();
       if (line) {
-        console.log('🔍 处理行:', line);
+        console.log('🔍 dealing:', line);
         try {
           const response = JSON.parse(line);
-          console.log('MCP 响应:', JSON.stringify(response, null, 2));
+          console.log('MCP response:', JSON.stringify(response, null, 2));
           
           if (response.result && response.result.protocolVersion && !initialized) {
-            console.log('✅ MCP 初始化成功，协议版本:', response.result.protocolVersion);
+            console.log('✅ MCP init done:', response.result.protocolVersion);
             initialized = true;
             
             setTimeout(() => {
               if (!notificationSent) {
-                console.log('📤 发送初始化完成通知');
+                console.log('📤 send init information');
                 const initNotification = JSON.stringify({
                   jsonrpc: "2.0",
                   method: "notifications/initialized"
@@ -304,7 +303,7 @@ function tryStdioMCP(url, resolve, reject) {
                 
                 setTimeout(() => {
                   if (!requestSent) {
-                    console.log('📡 发送 fetch 请求:', url);
+                    console.log('📡 send fetch requests:', url);
                     const fetchRequest = JSON.stringify({
                       jsonrpc: "2.0",
                       id: 2,
@@ -318,11 +317,11 @@ function tryStdioMCP(url, resolve, reject) {
                       }
                     }) + '\n';
                     
-                    console.log('📤 发送的请求:', fetchRequest.trim());
+                    console.log('📤 sent requests:', fetchRequest.trim());
                     mcpProcess.stdin.write(fetchRequest);
                     requestSent = true;
                     
-                    console.log('⏱️ 请求已发送，等待响应...');
+                    console.log('⏱️ requests sent, wating for response...');
                   }
                 }, 200);
               }
@@ -330,11 +329,11 @@ function tryStdioMCP(url, resolve, reject) {
           }
           
           if (response.id === 2 && response.result) {
-            console.log('🎯 收到 fetch 响应:', response);
+            console.log('🎯 receive fetch response:', response);
             
             if (response.result.content && Array.isArray(response.result.content)) {
               const content = response.result.content[0].text;
-              console.log('✅ MCP fetch 成功，内容长度:', content.length);
+              console.log('✅ MCP fetch succuss, length:', content.length);
               responseReceived = true;
               
               try {
@@ -350,12 +349,12 @@ function tryStdioMCP(url, resolve, reject) {
               resolve(content);
               return;
             } else {
-              console.log('⚠️ fetch 响应格式异常:', response.result);
+              console.log('⚠️ fetch response format error:', response.result);
             }
           }
           
           if (response.error) {
-            console.log('❌ MCP 错误:', response.error);
+            console.log('❌ MCP error:', response.error);
             responseReceived = true;
             
             try {
@@ -373,11 +372,11 @@ function tryStdioMCP(url, resolve, reject) {
           }
           
           if (response.id === 2) {
-            console.log('🔔 收到 ID=2 的响应但不是预期格式:', response);
+            console.log('🔔 got ID=2:', response);
           }
           
         } catch (parseError) {
-          console.log('解析错误（忽略）:', parseError.message, '行内容:', line);
+          console.log('error:', parseError.message, 'line:', line);
         }
       }
     }
@@ -394,25 +393,25 @@ function tryStdioMCP(url, resolve, reject) {
   });
   
   mcpProcess.on('close', (code) => {
-    console.log(`MCP 进程退出，代码: ${code}`);
+    console.log(`MCP exit, code: ${code}`);
     if (error) {
-      console.log('MCP 错误输出:', error);
+      console.log('MCP error output:', error);
     }
     
     if (!responseReceived) {
-      console.log('⚠️ MCP 进程退出但未收到响应，使用备用方案');
+      console.log('⚠️ MCP exit without response, using fallback');
       resolve(fetchContentFallback(url));
     }
   });
   
   mcpProcess.on('error', (err) => {
-    console.log('❌ MCP 进程错误:', err.message);
+    console.log('❌ MCP error:', err.message);
     if (!responseReceived) {
       resolve(fetchContentFallback(url));
     }
   });
   
-  console.log('📤 发送 MCP 初始化请求');
+  console.log('📤 sned MCP init requests');
   const initRequest = JSON.stringify({
     jsonrpc: "2.0",
     id: 1,
@@ -431,13 +430,13 @@ function tryStdioMCP(url, resolve, reject) {
     }
   }) + '\n';
   
-  console.log('📤 发送的初始化请求:', initRequest.trim());
+  console.log('📤 send init requests:', initRequest.trim());
   mcpProcess.stdin.write(initRequest);
   
   setTimeout(() => {
     if (!responseReceived) {
-      console.log('⏰ MCP 请求超时，使用备用方案');
-      console.log('超时前的所有输出:', allOutput);
+      console.log('⏰ MCP timeout, no response received');
+      console.log('output before timeout:', allOutput);
       
       try {
         mcpProcess.stdin.end();
@@ -457,14 +456,14 @@ function tryStdioMCP(url, resolve, reject) {
 // 备用内容获取方案
 async function fetchContentFallback(url) {
   try {
-    console.log('📡 使用备用方案获取内容:', url);
+    console.log('📡 response:', url);
     
     if (typeof fetch === 'undefined') {
       try {
         const { default: nodeFetch } = await import('node-fetch');
         global.fetch = nodeFetch;
       } catch (e) {
-        throw new Error('需要安装 node-fetch: npm install node-fetch');
+        throw new Error('need install node-fetch: npm install node-fetch');
       }
     }
     
@@ -506,7 +505,6 @@ async function fetchContentFallback(url) {
   }
 }
 
-// 内容处理和清理
 function processContent(rawContent, maxLength = 4000) {
   if (!rawContent || typeof rawContent !== 'string') {
     return '';
@@ -540,62 +538,62 @@ function processContent(rawContent, maxLength = 4000) {
   return processed;
 }
 
-// LLM API 调用
+
 async function callLLM(content, question, contactInfo = null) {
   let prompt;
   let useContactEnhancement = false;
   
-  // 只有当确实提取到联系信息且用户询问联系方式时，才使用增强prompt
+
   if (contactInfo && isContactQuestion(question) && hasValidContactInfo(contactInfo)) {
-    console.log('🔍 询问联系方式且检测到有效联系信息，使用增强 prompt');
+    console.log('🔍 asking for contact info');
     useContactEnhancement = true;
     
-    let contactSection = '\n\n===== 提取的联系信息 =====\n';
+    let contactSection = '\n\n===== contact info got =====\n';
     
     if (contactInfo.emails.length > 0) {
-      contactSection += `📧 邮箱地址: ${contactInfo.emails.join(', ')}\n`;
+      contactSection += `📧 email address: ${contactInfo.emails.join(', ')}\n`;
     }
     
     if (contactInfo.phones.length > 0) {
-      contactSection += `📞 电话号码: ${contactInfo.phones.join(', ')}\n`;
+      contactSection += `📞 phone number: ${contactInfo.phones.join(', ')}\n`;
     }
     
     if (contactInfo.other.length > 0) {
-      contactSection += `📝 联系信息说明: ${contactInfo.other.join(' ')}\n`;
+      contactSection += `📝 contact information: ${contactInfo.other.join(' ')}\n`;
     }
     
     contactSection += '========================\n';
     
-    prompt = `用户询问联系方式，请基于网页内容和提取的联系信息提供准确回答。
+prompt = `The user is asking for contact information. Please provide an accurate answer based on the webpage content and the extracted contact details.
 
-网页内容：
+Webpage Content:
 ${content}
 ${contactSection}
-用户问题：${question}
+User Question: ${question}
 
-请提供准确、完整的联系方式信息，用中文回答：`;
-  } else {
-    console.log('🔍 使用标准 prompt（无联系信息增强）');
-    prompt = `请基于以下网页内容回答用户的问题。请提供准确、有用且简洁的回答。
+Please provide accurate and complete contact information in English:`;
+} else {
+  console.log('🔍 Using standard prompt (no contact enhancement)');
+  prompt = `Please answer the user's question based on the following webpage content. Provide an accurate, useful, and concise response.
 
-网页内容：
+Webpage Content:
 ${content}
 
-用户问题：${question}
+User Question: ${question}
 
-请提供中文回答：`;
-  }
+Please respond in English:`;
+}
 
   try {
     if (process.env.OPENAI_API_KEY) {
-      console.log('🤖 使用 OpenAI API');
+      console.log('🤖 using OpenAI API');
       
       if (typeof fetch === 'undefined') {
         try {
           const { default: nodeFetch } = await import('node-fetch');
           global.fetch = nodeFetch;
         } catch (e) {
-          console.log('⚠️ node-fetch 不可用，跳过 OpenAI API');
+          console.log('⚠️ node-fetch error, skip OpenAI API');
         }
       }
       
@@ -627,14 +625,14 @@ ${content}
     }
     
     if (process.env.ANTHROPIC_API_KEY) {
-      console.log('🧠 使用 Claude API');
+      console.log('🧠 use Claude API');
       
       if (typeof fetch === 'undefined') {
         try {
           const { default: nodeFetch } = await import('node-fetch');
           global.fetch = nodeFetch;
         } catch (e) {
-          console.log('⚠️ node-fetch 不可用，跳过 Claude API');
+          console.log('⚠️ node-fetch error, skip Claude API');
         }
       }
       
@@ -665,7 +663,7 @@ ${content}
       }
     }
     
-    console.log('💡 使用备用回答生成');
+    console.log('💡 use backend');
     return generateFallbackResponse(content, question, contactInfo);
     
   } catch (error) {
@@ -674,24 +672,23 @@ ${content}
   }
 }
 
-// 备用回答生成
 function generateFallbackResponse(content, question, contactInfo = null) {
   const questionLower = question.toLowerCase();
   
-  // 只有在确实有有效联系信息且询问联系方式时才使用联系信息回答
+
   if (isContactQuestion(question) && contactInfo && hasValidContactInfo(contactInfo)) {
-    let response = '根据网页内容，找到以下联系方式：\n\n';
+    let response = 'according to webpage content, find following contact informations:\n\n';
     
     if (contactInfo.emails && contactInfo.emails.length > 0) {
-      response += `📧 邮箱: ${contactInfo.emails.join(', ')}\n`;
+      response += `📧 email: ${contactInfo.emails.join(', ')}\n`;
     }
     
     if (contactInfo.phones && contactInfo.phones.length > 0) {
-      response += `📞 电话: ${contactInfo.phones.join(', ')}\n`;
+      response += `📞 phone: ${contactInfo.phones.join(', ')}\n`;
     }
     
     if (contactInfo.other && contactInfo.other.length > 0) {
-      response += `📝 其他信息: ${contactInfo.other.join(' ')}\n`;
+      response += `📝 others: ${contactInfo.other.join(' ')}\n`;
     }
     
     return response;
@@ -706,28 +703,27 @@ function generateFallbackResponse(content, question, contactInfo = null) {
     .slice(0, 3);
   
   if (relevantSentences.length > 0) {
-    return `基于网页内容，关于"${question}"的相关信息如下：\n\n${relevantSentences.join('. ')}\n\n注：这是基于内容关键词匹配生成的回答。`;
+    return `Based on the webpage content, here is some relevant information related to "${question}":\n\n${relevantSentences.join('. ')}\n\nNote: This response was generated based on keyword matching from the content.`;
   }
   
-  return `已获取到网页内容，但无法找到与"${question}"直接相关的信息。网页主要内容摘要：\n\n${content.substring(0, 300)}...`;
+  return `The webpage content was successfully retrieved, but no information directly related to "${question}" was found. Here is a brief summary of the main content:\n\n${content.substring(0, 300)}...`;
 }
 
-// 根路径
+
 app.get('/', (req, res) => {
   res.json({
-    message: '🚀 MCP Fetch 服务器正在运行',
+    message: '🚀 MCP Fetch running',
     timestamp: new Date().toISOString(),
     version: '1.0.0',
     endpoints: [
-      'GET /health - 健康检查',
-      'GET /api/status - 服务状态',
-      'GET /api/domains - 允许的域名',
-      'POST /api/ask - 内容分析'
+      'GET /health - health check',
+      'GET /api/status - server status',
+      'GET /api/domains - available whitelisted domains',
+      'POST /api/ask - ask a question about a URL',
     ]
   });
 });
 
-// 主要 API 端点
 app.post('/api/ask', async (req, res) => {
   const startTime = Date.now();
   
@@ -738,21 +734,21 @@ app.post('/api/ask', async (req, res) => {
       logRequest(req, 'VALIDATION_ERROR', { error: 'Missing URL or question' });
       return res.status(400).json({
         success: false,
-        error: 'URL 和问题都是必需的参数'
+        error: 'missing required parameters: url and question'
       });
     }
     
     if (typeof url !== 'string' || typeof question !== 'string') {
       return res.status(400).json({
         success: false,
-        error: '参数类型错误'
+        error: 'parameters must be strings'
       });
     }
     
     if (url.length > 2000 || question.length > 1000) {
       return res.status(400).json({
         success: false,
-        error: '输入内容过长'
+        error: 'longer than allowed length',
       });
     }
     
@@ -760,7 +756,7 @@ app.post('/api/ask', async (req, res) => {
       logRequest(req, 'URL_VALIDATION_ERROR', { url });
       return res.status(400).json({
         success: false,
-        error: '提供的 URL 不在允许的域名列表中，或包含不安全的路径'
+        error: 'url not valid or not whitelisted'
       });
     }
     
@@ -770,21 +766,21 @@ app.post('/api/ask', async (req, res) => {
     try {
       rawContent = await fetchContentViaMCP(url);
       mcpUsed = true;
-      console.log('✅ 使用 MCP fetch 获取内容成功');
+      console.log('✅ MCP fetch successful');
     } catch (error) {
-      console.log('⚠️ MCP fetch 失败，使用备用方案');
+      console.log('⚠️ MCP fetch failed');
       rawContent = await fetchContentFallback(url);
       mcpUsed = false;
     }
     
     if (!rawContent || rawContent.length < 50) {
-      throw new Error('获取的内容为空或过短');
+      throw new Error('short or empty content received from fetch');
     }
     
     const processedContent = processContent(rawContent);
     
     if (!processedContent) {
-      throw new Error('内容处理失败');
+      throw new Error('failed to process content');
     }
     
     const isAsking = isContactQuestion(question);
@@ -792,22 +788,22 @@ app.post('/api/ask', async (req, res) => {
     let contactInfoExtracted = false;
     
     if (isAsking) {
-      console.log('🔍 用户询问联系方式，开始检测联系信息');
+      console.log('🔍 user asked for contact info');
       const hasContact = hasContactInformation(processedContent);
       if (hasContact) {
         contactInfo = extractContactInformation(processedContent);
         if (hasValidContactInfo(contactInfo)) {
           contactInfoExtracted = true;
-          console.log('✅ 检测到有效联系信息:', contactInfo);
+          console.log('✅ detected contact info:', contactInfo);
         } else {
-          console.log('⚠️ 检测到联系模式但未提取到有效联系信息');
+          console.log('⚠️ detected contact information but it is not valid or complete');
           contactInfo = null;
         }
       } else {
-        console.log('❌ 未在内容中找到联系信息');
+        console.log('❌ did not detect contact information in content');
       }
     } else {
-      console.log('🔍 非联系方式询问，跳过联系信息检测');
+      console.log('🔍 not contact info');
     }
     
     const answer = await callLLM(processedContent, question, contactInfo);
@@ -856,27 +852,27 @@ app.post('/api/ask', async (req, res) => {
     if (error.message.includes('timeout')) {
       return res.status(408).json({
         success: false,
-        error: '请求超时，请稍后重试'
+        error: 'the request timed out, please try again later'
       });
     }
     
     if (error.message.includes('fetch') || error.message.includes('network')) {
       return res.status(502).json({
         success: false,
-        error: '无法访问指定的网址，请检查 URL 是否正确'
+        error: 'cannot fetch content from the provided URL, please check the URL or your network connection'
       });
     }
     
     res.status(500).json({
       success: false,
       error: process.env.NODE_ENV === 'production' 
-        ? '服务器内部错误，请稍后重试' 
+        ? 'error occurred, please try again later' 
         : error.message
     });
   }
 });
 
-// 状态检查端点
+
 app.get('/api/status', async (req, res) => {
   try {
     const status = {
@@ -905,12 +901,12 @@ app.get('/api/status', async (req, res) => {
     res.json(status);
   } catch (error) {
     res.status(500).json({
-      error: '状态检查失败'
+      error: 'failed to retrieve server status',
     });
   }
 });
 
-// 获取允许的域名列表
+
 app.get('/api/domains', async (req, res) => {
   try {
     res.json({
@@ -922,12 +918,12 @@ app.get('/api/domains', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      error: '获取域名列表失败'
+      error: 'failed to retrieve whitelisted domains',
     });
   }
 });
 
-// 健康检查端点
+
 app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'healthy',
@@ -935,66 +931,66 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 404 处理
+
 app.use((req, res, next) => {
-  console.log(`404 - 未找到路径: ${req.url}`);
+  console.log(`404: ${req.url}`);
   res.status(404).json({
     success: false,
-    error: '接口不存在',
+    error: 'api not found',
     requestedPath: req.url,
     availablePaths: ['/', '/health', '/api/status', '/api/domains', '/api/ask']
   });
 });
 
-// 全局错误处理
+
 app.use((error, req, res, next) => {
   console.error('Unhandled Error:', error);
   
   res.status(500).json({
     success: false,
     error: process.env.NODE_ENV === 'production' 
-      ? '服务器内部错误' 
+      ? 'error occurred, please try again later' 
       : error.message
   });
 });
 
-// 优雅关闭
+// Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('收到 SIGTERM 信号，正在优雅关闭服务器...');
+  console.log('Received SIGTERM, gracefully shutting down server...');
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('收到 SIGINT 信号，正在优雅关闭服务器...');
+  console.log('Received SIGINT, gracefully shutting down server...');
   process.exit(0);
 });
 
-// 启动服务器
+// Start server
 const server = app.listen(PORT, () => {
   console.log('='.repeat(60));
-  console.log(`🚀 MCP Fetch 服务器启动成功！`);
-  console.log(`📡 监听端口: ${PORT}`);
-  console.log(`🌍 环境: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🌐 本地地址: http://localhost:${PORT}`);
-  console.log(`🔗 API 地址: http://localhost:${PORT}/api`);
-  console.log(`📊 状态检查: http://localhost:${PORT}/api/status`);
-  console.log(`💚 健康检查: http://localhost:${PORT}/health`);
-  console.log(`🛡️ 允许的域名数量: ${WHITELISTED_DOMAINS.length}`);
-  console.log(`🔑 OpenAI API: ${process.env.OPENAI_API_KEY ? '已配置' : '未配置'}`);
-  console.log(`🔑 Claude API: ${process.env.ANTHROPIC_API_KEY ? '已配置' : '未配置'}`);
-  console.log(`⚡ 服务器就绪，可以开始处理请求！`);
+  console.log(`🚀 MCP Fetch Server started successfully!`);
+  console.log(`📡 Listening on port: ${PORT}`);
+  console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 Local address: http://localhost:${PORT}`);
+  console.log(`🔗 API address: http://localhost:${PORT}/api`);
+  console.log(`📊 Status check: http://localhost:${PORT}/api/status`);
+  console.log(`💚 Health check: http://localhost:${PORT}/health`);
+  console.log(`🛡️ Whitelisted domain count: ${WHITELISTED_DOMAINS.length}`);
+  console.log(`🔑 OpenAI API: ${process.env.OPENAI_API_KEY ? 'Configured' : 'Not configured'}`);
+  console.log(`🔑 Claude API: ${process.env.ANTHROPIC_API_KEY ? 'Configured' : 'Not configured'}`);
+  console.log(`⚡ Server ready to process requests!`);
   console.log('='.repeat(60));
 });
 
 server.on('error', (error) => {
   if (error.code === 'EADDRINUSE') {
-    console.error(`❌ 端口 ${PORT} 已被占用！`);
-    console.log('请尝试以下解决方案:');
-    console.log('1. 关闭占用端口的程序');
-    console.log('2. 或者修改 PORT 环境变量使用其他端口');
-    console.log(`   例如: PORT=3002 npm run dev`);
+    console.error(`❌ Port ${PORT} is already in use!`);
+    console.log('Please try the following solutions:');
+    console.log('1. Stop the program occupying the port');
+    console.log('2. Or change the PORT environment variable to use another port');
+    console.log(`   Example: PORT=3002 npm run dev`);
   } else {
-    console.error('❌ 服务器启动失败:', error);
+    console.error('❌ Server failed to start:', error);
   }
   process.exit(1);
 });
