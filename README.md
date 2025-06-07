@@ -48,29 +48,39 @@ Logs all requests and errors.
 ### Backend API Service
 
 POST /ask: Accepts URL and question.
+
 GET /status: (Optional) Check job status.
+
 URL validation and security checks (only allow whitelisted domains).
 
 ### Web Fetching Module
 
 MCP Fetch to crawl the provided URL
+
 Converts HTML to Markdown or structured text.
+
 Handles failures (timeouts, inaccessible URLs, etc.).
 
 ### Content Processing/Summarization
 
 Cleans up, deduplicates, and optionally summarizes fetched content.
+
 Can extract specific fields (e.g., contacts, tables) if needed.
+
 Prepares the content for LLM input (token limit, format).
 
 ### LLM Invocation Module
 
 Assembles prompt with processed content and user question.
+
 Sends to selected LLM (OpenAI, Claude, local models, etc.).
+
 Manages prompt size, formatting, and model-specific constraints.
 
 ### Security & Privacy
 
 Sanitizes content to avoid prompt injection attacks.
+
 Protects sensitive information.
+
 Rate limits and request authentication as needed.
