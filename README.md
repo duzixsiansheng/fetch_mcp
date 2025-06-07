@@ -4,7 +4,7 @@
 
 **Solution Architecture**:
 1. **MCP Fetch** → Raw web content extraction
-2. **Content Processing** → Noise removal, contact info detection (+ optional NLP for higher accuracy)
+2. **Content Processing** → Noise removal, contact info detection (can use NLP for higher accuracy)
 3. **Smart Prompting** → Context-aware LLM queries with enhanced data
 4. **Secure Pipeline** → URL validation, rate limiting, error handling
 
