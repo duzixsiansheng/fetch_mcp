@@ -1,3 +1,19 @@
+# Design Process
+
+Problem: Web content → LLM analysis requires reliable fetching, processing, and smart prompt construction.
+Solution Architecture:
+
+MCP Fetch → Raw web content extraction
+
+Content Processing → Noise removal, contact info detection (If requires a higher accuracy on contact info detect, we could add another NLP)
+
+Smart Prompting → Context-aware LLM queries with enhanced data
+
+Secure Pipeline → URL validation, rate limiting, error handling
+
+Key Innovation: Automatic contact information detection and prompt enhancement for more accurate LLM responses.
+
+
 # 1.Objective
 
 Build a service where users submit safe, pre-approved URLs and questions.
@@ -19,7 +35,7 @@ The backend calls the fetching module, which scrapes the web page and converts i
 
 ## Content Processing
 
-Cleans up raw content, removes noise/ads, deduplicates, and summarizes if content is lengthy.
+Cleans up raw content, removes noise/ads, deduplicates, and detect contact info.
 
 ## Prompt Construction
 

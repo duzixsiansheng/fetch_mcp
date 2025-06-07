@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -77,7 +77,7 @@
             font-weight: 600;
         }
 
-        input[type="url"], textarea, select {
+        input[type="url"], textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid #e1e5e9;
@@ -87,7 +87,7 @@
             background: white;
         }
 
-        input[type="url"]:focus, textarea:focus, select:focus {
+        input[type="url"]:focus, textarea:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -130,19 +130,8 @@
             background: linear-gradient(45deg, #28a745, #20c997);
         }
 
-        .btn-warning {
-            background: linear-gradient(45deg, #ffc107, #fd7e14);
-        }
-
         .btn-contact-test {
             background: linear-gradient(45deg, #ff9800, #ff5722);
-        }
-
-        .quick-tests {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
         }
 
         .status-bar {
@@ -181,13 +170,38 @@
             50% { opacity: 0.5; }
         }
 
+        .quick-tests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preset-item {
+            background: white;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            background: linear-gradient(135deg, #fff3e0 0%, #e8f5e8 100%);
+        }
+
+        .preset-item:hover {
+            background: linear-gradient(135deg, #ffe0b2 0%, #c8e6c9 100%);
+            border-color: #f57c00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
         .results-area {
             grid-column: span 2;
             background: #f8f9fa;
             border-radius: 15px;
             padding: 25px;
             border: 1px solid #e9ecef;
-            max-height: 800px;
+            max-height: 600px;
             overflow-y: auto;
         }
 
@@ -259,45 +273,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        .preset-urls {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .preset-item {
-            background: white;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .preset-item:hover {
-            background: #e9ecef;
-            border-color: #667eea;
-        }
-
-        .preset-item.selected {
-            background: #e7f3ff;
-            border-color: #667eea;
-        }
-
-        .preset-item.contact-test {
-            background: linear-gradient(135deg, #fff3e0 0%, #e8f5e8 100%);
-            border-color: #ff9800;
-            border-width: 2px;
-        }
-
-        .preset-item.contact-test:hover {
-            background: linear-gradient(135deg, #ffe0b2 0%, #c8e6c9 100%);
-            border-color: #f57c00;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
-        }
-
         .clear-btn {
             background: #dc3545;
             float: right;
@@ -354,11 +329,11 @@
             color: #667eea;
         }
 
-        .raw-content details {
+        .raw-content-display details {
             margin-top: 8px;
         }
 
-        .raw-content summary {
+        .raw-content-display summary {
             cursor: pointer;
             padding: 8px 12px;
             background: #e9ecef;
@@ -368,7 +343,7 @@
             margin-bottom: 8px;
         }
 
-        .raw-content summary:hover {
+        .raw-content-display summary:hover {
             background: #dee2e6;
         }
 
@@ -377,116 +352,26 @@
             border-radius: 4px;
             padding: 12px;
             border-left: 3px solid #667eea;
-        }
-
-        .mock-mcp-content {
             font-family: 'Courier New', monospace;
             font-size: 13px;
-            color: #495057;
-            background: #ffffff;
-            padding: 12px;
-            border-radius: 4px;
-            border: 1px solid #dee2e6;
-            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
-        .mock-mcp-content p {
-            margin: 6px 0;
-            line-height: 1.4;
-        }
-
-        .llm-answer {
-            background: #ffffff;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 16px;
-        }
-
-        .answer-text {
-            font-size: 15px;
-            line-height: 1.6;
-            color: #333;
-            font-weight: 500;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .stat-item {
-            background: #ffffff;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            text-align: center;
-        }
-
-        .stat-label {
-            display: block;
-            font-size: 12px;
-            color: #6c757d;
-            margin-bottom: 4px;
-        }
-
-        .stat-value {
-            display: block;
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        /* Contact information display styles */
+        /* Contact information display */
         .contact-info-display {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            border-radius: 12px;
-            padding: 20px;
-            border: 2px solid #2196f3;
-            margin: 16px 0;
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
-        }
-
-        .contact-info-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid rgba(33, 150, 243, 0.2);
-        }
-
-        .contact-info-header h5 {
-            margin: 0;
-            color: #1976d2;
-            font-size: 18px;
-            font-weight: 700;
-            margin-left: 8px;
-        }
-
-        .contact-info-status {
-            background: #4caf50;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: auto;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #dee2e6;
         }
 
         .contact-section {
             background: white;
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 4px solid #2196f3;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .contact-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #28a745;
         }
 
         .contact-section:last-child {
@@ -494,64 +379,25 @@
         }
 
         .contact-section-title {
-            display: flex;
-            align-items: center;
-            margin: 0 0 12px 0;
-            color: #1976d2;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .contact-section-icon {
-            font-size: 20px;
-            margin-right: 8px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
 
         .contact-items {
             display: grid;
-            gap: 8px;
+            gap: 6px;
         }
 
         .contact-item {
             background: #f8f9fa;
             border: 1px solid #e9ecef;
-            border-radius: 6px;
-            padding: 12px 16px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 14px;
-            color: #495057;
-            position: relative;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .contact-item:hover {
-            background: #e3f2fd;
-            border-color: #2196f3;
-            color: #1976d2;
-        }
-
-        .contact-item-text {
-            flex: 1;
-            word-break: break-all;
-        }
-
-        .contact-item-copy {
-            background: #2196f3;
-            color: white;
-            border: none;
-            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-left: 8px;
-            transition: background 0.2s ease;
-        }
-
-        .contact-item-copy:hover {
-            background: #1976d2;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #495057;
         }
 
         .contact-empty {
@@ -560,68 +406,47 @@
             font-style: italic;
             padding: 20px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 2px dashed #dee2e6;
         }
 
-        .contact-enhancement-notice {
+        /* LLM Processing */
+        .llm-section {
+            margin-top: 12px;
+        }
+
+        .prompt-section, .response-section {
+            margin-bottom: 16px;
+        }
+
+        .prompt-section h5, .response-section h5 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .prompt-content {
             background: #fff3cd;
             border: 1px solid #ffeaa7;
             border-radius: 6px;
-            padding: 12px 16px;
-            margin-top: 16px;
-            color: #856404;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-        }
-
-        .contact-enhancement-notice.enhanced {
-            background: #d4edda;
-            border-color: #c3e6cb;
-            color: #155724;
-        }
-
-        .contact-enhancement-notice .icon {
-            margin-right: 8px;
-            font-size: 16px;
-        }
-
-        /* MCP Raw Data Display */
-        .mcp-raw-section {
-            background: #fff8e1;
-            border: 2px solid #ffc107;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 16px 0;
-        }
-
-        .mcp-raw-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid rgba(255, 193, 7, 0.3);
-        }
-
-        .mcp-raw-header h5 {
-            margin: 0;
-            color: #f57c00;
-            font-size: 18px;
-            font-weight: 700;
-            margin-left: 8px;
-        }
-
-        .mcp-raw-content {
-            background: white;
-            border-radius: 8px;
-            padding: 16px;
+            padding: 12px;
             font-family: 'Courier New', monospace;
             font-size: 13px;
-            color: #333;
-            max-height: 400px;
+            color: #856404;
+            max-height: 200px;
             overflow-y: auto;
-            border: 1px solid #ffc107;
+            white-space: pre-wrap;
+        }
+
+        .llm-answer {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            padding: 12px;
+            color: #155724;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         @media (max-width: 768px) {
@@ -638,10 +463,6 @@
                 flex-direction: column;
                 gap: 8px;
             }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -649,7 +470,7 @@
     <div class="container">
         <div class="header">
             <h1>🚀 MCP Fetch Testing Tool</h1>
-            <p>Local Frontend Interface - Connect to Backend API for Content Fetching Tests</p>
+            <p>Simplified Frontend Interface - Connect to Backend API for Content Fetching Tests</p>
         </div>
 
         <div class="main-content">
@@ -665,11 +486,13 @@
                 </div>
                 
                 <div class="quick-tests">
-                    <button class="btn btn-success" onclick="checkStatus()">Check Status</button>
-                    <button class="btn btn-success" onclick="checkDomains()">View Domains</button>
-                    <button class="btn btn-warning" onclick="testConnectivity()">Connection Test</button>
-                    <button class="btn btn-contact-test" onclick="testContactDetection()">Contact Info Test</button>
-                    <button class="btn btn-contact-test" onclick="testRealContactPage()" style="background: linear-gradient(45deg, #4caf50, #2196f3);">Real Contact Page</button>
+                    <button class="btn btn-success" onclick="checkDomains()">View Available Domains</button>
+                </div>
+
+                <!-- Quick Test -->
+                <div class="preset-item" onclick="usePreset('https://stackoverflow.com/contact', 'What are the contact methods for this website?')">
+                    <strong>🧪 StackOverflow Contact Page</strong><br>
+                    <small>Test contact info extraction</small>
                 </div>
             </div>
 
@@ -679,55 +502,17 @@
                 
                 <div class="form-group">
                     <label for="testUrl">Test URL:</label>
-                    <input type="url" id="testUrl" placeholder="https://example.com" value="https://example.com">
+                    <input type="url" id="testUrl" placeholder="https://example.com" value="https://stackoverflow.com/contact">
                 </div>
 
                 <div class="form-group">
                     <label for="testQuestion">Question:</label>
-                    <textarea id="testQuestion" placeholder="Enter your question...">What is this website about?</textarea>
+                    <textarea id="testQuestion" placeholder="Enter your question...">What are the contact methods for this website?</textarea>
                 </div>
 
                 <button class="btn" onclick="testFetch()" id="fetchBtn">
                     📡 Fetch Content
                 </button>
-                <button class="btn btn-secondary" onclick="fillRandomTest()">🎲 Random Test</button>
-
-                <!-- Preset Tests -->
-                <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">Quick Tests</h3>
-                <div class="preset-urls">
-                    <div class="preset-item" onclick="usePreset('https://example.com', 'What is the main content of this website?')">
-                        <strong>Example.com</strong><br>
-                        <small>Basic test website</small>
-                    </div>
-                    <div class="preset-item" onclick="usePreset('https://en.wikipedia.org/wiki/Artificial_intelligence', 'What is artificial intelligence?')">
-                        <strong>Wikipedia AI</strong><br>
-                        <small>AI related content</small>
-                    </div>
-                    <div class="preset-item" onclick="usePreset('https://github.com/microsoft/vscode', 'What does this project do?')">
-                        <strong>GitHub VSCode</strong><br>
-                        <small>Open source project info</small>
-                    </div>
-                    <div class="preset-item" onclick="usePreset('https://stackoverflow.com/questions/tagged/javascript', 'What are the popular JavaScript questions?')">
-                        <strong>StackOverflow</strong><br>
-                        <small>Programming Q&A site</small>
-                    </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/microsoft/vscode', 'How to contact the project maintainers?')">
-                        <strong>🧪 GitHub Contact Test</strong><br>
-                        <small>Test contact info extraction</small>
-                    </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://stackoverflow.com/contact', 'What are the contact methods for this website?')">
-                        <strong>🧪 StackOverflow Contact Page</strong><br>
-                        <small>Real contact info page test</small>
-                    </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/contact', 'How to contact GitHub support team?')">
-                        <strong>🧪 GitHub Official Contact</strong><br>
-                        <small>Official contact info test</small>
-                    </div>
-                    <div class="preset-item contact-test" onclick="usePreset('https://bbc.com/news/help/default/contact_us/questions', 'What are BBC contact methods?')">
-                        <strong>🧪 BBC Contact Page</strong><br>
-                        <small>Media organization contact info</small>
-                    </div>
-                </div>
             </div>
 
             <!-- Results Display Area -->
@@ -780,187 +565,6 @@
             }
         }
 
-        // Generate MCP raw data display
-        function generateMCPRawDisplay(rawContent, metadata) {
-            if (!rawContent) {
-                return `<div class="contact-empty">No MCP raw content available</div>`;
-            }
-
-            return `
-                <div class="mcp-raw-section">
-                    <div class="mcp-raw-header">
-                        <span class="contact-section-icon">🔧</span>
-                        <h5>MCP Raw Data (${metadata.mcpUsed ? 'MCP Fetch' : 'Fallback Fetch'})</h5>
-                    </div>
-                    <div class="mcp-raw-content">
-                        ${rawContent.replace(/\n/g, '<br>').replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')}
-                    </div>
-                </div>
-            `;
-        }
-
-        // Generate contact info display HTML
-        function generateContactInfoDisplay(contactInfo, metadata) {
-            if (!contactInfo) {
-                return `<div class="contact-empty">No contact information detected</div>`;
-            }
-
-            const hasEmails = contactInfo.emails && contactInfo.emails.length > 0;
-            const hasPhones = contactInfo.phones && contactInfo.phones.length > 0;
-            const hasOther = contactInfo.other && contactInfo.other.length > 0;
-
-            if (!hasEmails && !hasPhones && !hasOther) {
-                return `<div class="contact-empty">No valid contact information found</div>`;
-            }
-
-            let html = `
-                <div class="contact-info-display">
-                    <div class="contact-info-header">
-                        <span class="contact-section-icon">📞</span>
-                        <h5>Extracted Contact Information</h5>
-                        <span class="contact-info-status">${metadata.contactEnhanced ? 'Enhanced Analysis' : 'Reference Only'}</span>
-                    </div>
-            `;
-
-            // Email addresses
-            if (hasEmails) {
-                html += `
-                    <div class="contact-section">
-                        <div class="contact-section-title">
-                            <span class="contact-section-icon">📧</span>
-                            Email Addresses (${contactInfo.emails.length})
-                        </div>
-                        <div class="contact-items">
-                            ${contactInfo.emails.map(email => `
-                                <div class="contact-item">
-                                    <span class="contact-item-text">${email}</span>
-                                    <button class="contact-item-copy" onclick="copyToClipboard('${email}')">Copy</button>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Phone numbers
-            if (hasPhones) {
-                html += `
-                    <div class="contact-section">
-                        <div class="contact-section-title">
-                            <span class="contact-section-icon">📞</span>
-                            Phone Numbers (${contactInfo.phones.length})
-                        </div>
-                        <div class="contact-items">
-                            ${contactInfo.phones.map(phone => `
-                                <div class="contact-item">
-                                    <span class="contact-item-text">${phone}</span>
-                                    <button class="contact-item-copy" onclick="copyToClipboard('${phone}')">Copy</button>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Other contact info
-            if (hasOther) {
-                html += `
-                    <div class="contact-section">
-                        <div class="contact-section-title">
-                            <span class="contact-section-icon">📝</span>
-                            Other Contact Info (${contactInfo.other.length})
-                        </div>
-                        <div class="contact-items">
-                            ${contactInfo.other.map(info => `
-                                <div class="contact-item">
-                                    <span class="contact-item-text">${info.trim()}</span>
-                                    <button class="contact-item-copy" onclick="copyToClipboard('${info.trim()}')">Copy</button>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-
-            // Enhancement notice
-            html += `
-                <div class="contact-enhancement-notice ${metadata.contactEnhanced ? 'enhanced' : ''}">
-                    <span class="icon">${metadata.contactEnhanced ? '✅' : '💡'}</span>
-                    ${metadata.contactEnhanced 
-                        ? 'This contact information was used to enhance LLM analysis for more accurate responses.'
-                        : 'This contact information is for reference only. Ask specific contact questions for detailed analysis.'
-                    }
-                </div>
-            `;
-
-            html += `</div>`;
-            return html;
-        }
-
-        // Copy to clipboard
-        function copyToClipboard(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showCopySuccess();
-                }).catch(err => {
-                    console.error('Copy failed:', err);
-                    fallbackCopyTextToClipboard(text);
-                });
-            } else {
-                fallbackCopyTextToClipboard(text);
-            }
-        }
-
-        function fallbackCopyTextToClipboard(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.top = "0";
-            textArea.style.left = "0";
-            textArea.style.position = "fixed";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                showCopySuccess();
-            } catch (err) {
-                console.error('Copy failed:', err);
-            }
-            
-            document.body.removeChild(textArea);
-        }
-
-        function showCopySuccess() {
-            // Create temporary toast notification
-            const toast = document.createElement('div');
-            toast.textContent = '✅ Copied to clipboard';
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #4caf50;
-                color: white;
-                padding: 12px 20px;
-                border-radius: 6px;
-                z-index: 10000;
-                font-size: 14px;
-                font-weight: 600;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                transition: all 0.3s ease;
-            `;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-20px)';
-                setTimeout(() => {
-                    document.body.removeChild(toast);
-                }, 300);
-            }, 2000);
-        }
-
         // Add result to interface
         function addResult(title, data, isError = false, processingTime = null) {
             testCounter++;
@@ -979,98 +583,69 @@
             
             let contentHtml = '';
             
-            // Check if this is a content fetch response, if so display MCP and LLM results separately
+            // Check if this is a content fetch response with MCP data
             if (data && data.success && data.data && data.data.answer && data.data.metadata) {
                 const metadata = data.data.metadata;
                 
                 contentHtml = `
                     <div class="processing-steps">
                         <div class="step-section">
-                            <h4 class="step-title">${metadata.mcpUsed ? '📡 MCP Fetch Raw Results' : '🔄 Fallback Fetch Raw Results'}</h4>
+                            <h4 class="step-title">1️⃣ ${metadata.mcpUsed ? 'MCP Fetch' : 'Fallback Fetch'} - Raw Content</h4>
                             <div class="step-content">
                                 <div class="step-meta">
                                     <span class="meta-item">${metadata.mcpUsed ? '✅ MCP Success' : '🔄 Fallback Used'}</span>
-                                    <span class="meta-item">📄 Content Length: ${metadata.contentLength} chars</span>
+                                    <span class="meta-item">📄 Length: ${metadata.contentLength} chars</span>
                                     <span class="meta-item">🌐 URL: ${data.data.url}</span>
-                                    <span class="meta-item">🔧 Data Source: ${metadata.source || (metadata.mcpUsed ? 'MCP Fetch' : 'Fallback Fetch')}</span>
                                 </div>
-                                <div class="raw-content">
+                                <div class="raw-content-display">
                                     <details>
-                                        <summary>View Raw Fetched Content (Click to expand)</summary>
+                                        <summary>View Raw MCP Content (Click to expand)</summary>
                                         <div class="content-preview">
-                                            <p><strong>Note:</strong> This is the ${metadata.mcpUsed ? 'Markdown' : 'plain text'} format content extracted by ${metadata.mcpUsed ? 'MCP fetch tool' : 'fallback fetch method'}, with HTML tags and noise removed.</p>
-                                            <div class="mock-mcp-content">
-                                                ${data.data.rawContent ? 
-                                                    data.data.rawContent.substring(0, 1000).replace(/\n/g, '<br>') + (data.data.rawContent.length > 1000 ? '<br><br><em>[Content too long, showing first 1000 characters]</em>' : '') :
-                                                    `<p>🔧 ${metadata.mcpUsed ? 'MCP fetch tool' : 'Fallback fetch method'} converted webpage to structured format</p>
-                                                     <p>📊 Processed ${metadata.contentLength} characters of content</p>
-                                                     <p>🧹 Auto-filtered ads, navigation bars and irrelevant content</p>
-                                                     <p>📝 Preserved main article body, tables, links and core information</p>`
-                                                }
-                                            </div>
-                                        </details>
-                                    </div>
+                                            ${data.data.rawContent ? 
+                                                data.data.rawContent.substring(0, 1500).replace(/\n/g, '<br>') + (data.data.rawContent.length > 1500 ? '<br><br><em>[Showing first 1500 characters...]</em>' : '') :
+                                                'Raw content not available'
+                                            }
+                                        </div>
+                                    </details>
                                 </div>
                             </div>
                         </div>
                         
-                        ${generateMCPRawDisplay(data.data.rawContent, metadata)}
-                        
-                        ${data.data.contactInfo && metadata.contactInfoFound ? `
                         <div class="step-divider">⬇️</div>
                         
                         <div class="step-section">
-                            <h4 class="step-title">📞 Contact Information Extraction Results</h4>
+                            <h4 class="step-title">2️⃣ Contact Information Extraction</h4>
                             <div class="step-content">
                                 <div class="step-meta">
-                                    <span class="meta-item">${metadata.contactEnhanced ? '✅ Applied to LLM Analysis' : '📋 Reference Only'}</span>
                                     <span class="meta-item">🔍 Query Type: ${metadata.isContactQuestion ? 'Contact Question' : 'Regular Question'}</span>
+                                    <span class="meta-item">📞 Contact Found: ${metadata.contactInfoFound ? 'Yes' : 'No'}</span>
+                                    <span class="meta-item">🎯 Enhanced: ${metadata.contactEnhanced ? 'Applied' : 'Not Applied'}</span>
                                 </div>
                                 ${generateContactInfoDisplay(data.data.contactInfo, metadata)}
                             </div>
                         </div>
-                        ` : ''}
                         
                         <div class="step-divider">⬇️</div>
                         
                         <div class="step-section">
-                            <h4 class="step-title">🤖 LLM Intelligent Analysis Results</h4>
+                            <h4 class="step-title">3️⃣ LLM Processing & Response</h4>
                             <div class="step-content">
                                 <div class="step-meta">
-                                    <span class="meta-item">🎯 Question: "${data.data.question}"</span>
-                                    <span class="meta-item">📝 Answer Length: ${data.data.answer.length} chars</span>
+                                    <span class="meta-item">🤖 LLM: ${metadata.llmProvider || 'Backend Processing'}</span>
+                                    <span class="meta-item">📝 Response Length: ${data.data.answer.length} chars</span>
                                 </div>
-                                <div class="llm-answer">
-                                    <div class="answer-text">${data.data.answer}</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="step-divider">⬇️</div>
-                        
-                        <div class="step-section">
-                            <h4 class="step-title">📊 Processing Statistics</h4>
-                            <div class="step-content">
-                                <div class="stats-grid">
-                                    <div class="stat-item">
-                                        <span class="stat-label">Total Processing Time</span>
-                                        <span class="stat-value">${processingTime || metadata.processingTime}ms</span>
+                                <div class="llm-section">
+                                    <div class="prompt-section">
+                                        <h5>💭 LLM Prompt (Reconstructed):</h5>
+                                        <div class="prompt-content">
+                                            ${generatePromptDisplay(data.data.question, data.data.rawContent, data.data.contactInfo, metadata)}
+                                        </div>
                                     </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Content Compression</span>
-                                        <span class="stat-value">${Math.round((data.data.answer.length / metadata.contentLength) * 100)}%</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Contact Detection</span>
-                                        <span class="stat-value">${metadata.contactInfoFound ? '✅ Extracted' : '❌ Not Found'}</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Enhanced Analysis</span>
-                                        <span class="stat-value">${metadata.contactEnhanced ? '✅ Applied' : '❌ Not Applied'}</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Processing Time</span>
-                                        <span class="stat-value">${metadata.timestamp ? new Date(metadata.timestamp).toLocaleString() : timeStr}</span>
+                                    <div class="response-section">
+                                        <h5>🎯 LLM Response:</h5>
+                                        <div class="llm-answer">
+                                            ${data.data.answer}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1078,7 +653,7 @@
                     </div>
                 `;
             } else {
-                // Other types of results (status checks, errors, etc.)
+                // Simple results for non-fetch requests
                 contentHtml = `<div class="result-content">${JSON.stringify(data, null, 2)}</div>`;
             }
             
@@ -1093,9 +668,100 @@
             container.insertBefore(resultDiv, container.firstChild);
             
             // Limit number of results displayed
-            if (container.children.length > 5) {
+            if (container.children.length > 3) {
                 container.removeChild(container.lastChild);
             }
+        }
+
+        // Generate contact info display HTML
+        function generateContactInfoDisplay(contactInfo, metadata) {
+            if (!contactInfo || (!contactInfo.emails?.length && !contactInfo.phones?.length && !contactInfo.other?.length)) {
+                return `<div class="contact-empty">❌ No contact information detected in the content</div>`;
+            }
+
+            let html = `<div class="contact-info-display">`;
+            
+            // Email addresses
+            if (contactInfo.emails && contactInfo.emails.length > 0) {
+                html += `
+                    <div class="contact-section">
+                        <div class="contact-section-title">📧 Email Addresses (${contactInfo.emails.length})</div>
+                        <div class="contact-items">
+                            ${contactInfo.emails.map(email => `<div class="contact-item">${email}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Phone numbers
+            if (contactInfo.phones && contactInfo.phones.length > 0) {
+                html += `
+                    <div class="contact-section">
+                        <div class="contact-section-title">📞 Phone Numbers (${contactInfo.phones.length})</div>
+                        <div class="contact-items">
+                            ${contactInfo.phones.map(phone => `<div class="contact-item">${phone}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Other contact info
+            if (contactInfo.other && contactInfo.other.length > 0) {
+                html += `
+                    <div class="contact-section">
+                        <div class="contact-section-title">📝 Other Contact Info (${contactInfo.other.length})</div>
+                        <div class="contact-items">
+                            ${contactInfo.other.map(info => `<div class="contact-item">${info.trim()}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            return html;
+        }
+
+        // Generate prompt display
+        function generatePromptDisplay(question, rawContent, contactInfo, metadata) {
+            const isContactQuestion = metadata.isContactQuestion;
+            const hasContactInfo = contactInfo && (contactInfo.emails?.length || contactInfo.phones?.length || contactInfo.other?.length);
+            
+            let prompt = '';
+            
+            if (isContactQuestion && hasContactInfo && metadata.contactEnhanced) {
+                prompt = `The user is asking for contact information. Please provide an accurate answer based on the webpage content and the extracted contact details.
+
+Webpage Content:
+${rawContent ? rawContent.substring(0, 500) + '...' : '[Content processed]'}
+
+===== Contact Info Extracted =====
+`;
+                if (contactInfo.emails?.length) {
+                    prompt += `📧 Email: ${contactInfo.emails.join(', ')}\n`;
+                }
+                if (contactInfo.phones?.length) {
+                    prompt += `📞 Phone: ${contactInfo.phones.join(', ')}\n`;
+                }
+                if (contactInfo.other?.length) {
+                    prompt += `📝 Other: ${contactInfo.other.join(' ')}\n`;
+                }
+                prompt += `========================
+
+User Question: ${question}
+
+Please provide accurate and complete contact information in English:`;
+            } else {
+                prompt = `Please answer the user's question based on the following webpage content. Provide an accurate, useful, and concise response.
+
+Webpage Content:
+${rawContent ? rawContent.substring(0, 500) + '...' : '[Content processed]'}
+
+User Question: ${question}
+
+Please respond in English:`;
+            }
+            
+            return prompt;
         }
 
         // Generic API request function
@@ -1120,107 +786,14 @@
             }
         }
 
-        // Test connectivity
-        async function testConnectivity() {
-            try {
-                const { data, processingTime } = await makeRequest('/status');
-                addResult('Connection Test', { 
-                    status: 'Connection successful',
-                    serverStatus: data.status,
-                    uptime: data.uptime + ' seconds'
-                }, false, processingTime);
-            } catch (error) {
-                addResult('Connection Test', { 
-                    status: 'Connection failed',
-                    error: error.message 
-                }, true, error.processingTime);
-            }
-        }
-
-        // Check status
-        async function checkStatus() {
-            try {
-                const { data, processingTime } = await makeRequest('/status');
-                addResult('Status Check', data, false, processingTime);
-            } catch (error) {
-                addResult('Status Check', { error: error.message }, true, error.processingTime);
-            }
-        }
-
         // Check domain list
         async function checkDomains() {
             try {
                 const { data, processingTime } = await makeRequest('/domains');
-                addResult('Domain List', data, false, processingTime);
+                addResult('Available Domains', data, false, processingTime);
             } catch (error) {
-                addResult('Domain List', { error: error.message }, true, error.processingTime);
+                addResult('Available Domains', { error: error.message }, true, error.processingTime);
             }
-        }
-
-        // Check contact info functionality
-        async function testContactDetection() {
-            // Use multiple test cases to demonstrate contact info detection
-            const testCases = [
-                {
-                    url: 'https://stackoverflow.com/contact',
-                    question: 'What are the contact methods for this website?',
-                    description: 'StackOverflow Contact Page'
-                },
-                {
-                    url: 'https://github.com/contact',
-                    question: 'How to contact GitHub support team?',
-                    description: 'GitHub Official Contact'
-                },
-                {
-                    url: 'https://example.com',
-                    question: 'What are the contact methods for this website?',
-                    description: 'Example.com (likely no contact info)'
-                }
-            ];
-
-            const btn = document.getElementById('fetchBtn');
-            const originalText = btn.innerHTML;
-            
-            // Randomly select a test case
-            const testData = testCases[Math.floor(Math.random() * testCases.length)];
-            
-            // Fill test data
-            document.getElementById('testUrl').value = testData.url;
-            document.getElementById('testQuestion').value = testData.question;
-            
-            btn.disabled = true;
-            btn.innerHTML = '<span class="loading"><span class="spinner"></span>Testing contact info detection...</span>';
-
-            try {
-                const { data, processingTime } = await makeRequest('/ask', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        url: testData.url,
-                        question: testData.question
-                    })
-                });
-
-                addResult(`Contact Info Detection Test: ${testData.description}`, data, !data.success, processingTime);
-            } catch (error) {
-                addResult('Contact Info Detection Test', { error: error.message }, true, error.processingTime);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }
-
-        // Test real contact page specifically
-        async function testRealContactPage() {
-            const testData = {
-                url: 'https://stackoverflow.com/contact',
-                question: 'What contact methods are available on this page? Please list all contact information in detail.'
-            };
-
-            document.getElementById('testUrl').value = testData.url;
-            document.getElementById('testQuestion').value = testData.question;
-            
-            // Auto-trigger test
-            await testFetch();
         }
 
         // Content fetch test
@@ -1256,35 +829,6 @@
         function usePreset(url, question) {
             document.getElementById('testUrl').value = url;
             document.getElementById('testQuestion').value = question;
-            
-            // Highlight selected preset
-            document.querySelectorAll('.preset-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            event.target.closest('.preset-item').classList.add('selected');
-        }
-
-        // Fill random test
-        function fillRandomTest() {
-            const urls = [
-                'https://example.com',
-                'https://en.wikipedia.org/wiki/JavaScript',
-                'https://github.com/nodejs/node',
-                'https://stackoverflow.com/questions/tagged/python'
-            ];
-            
-            const questions = [
-                'What is the main content of this website?',
-                'What important information is on this website?',
-                'What topic does this page discuss?',
-                'Summarize the core content of this webpage'
-            ];
-
-            const randomUrl = urls[Math.floor(Math.random() * urls.length)];
-            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-
-            document.getElementById('testUrl').value = randomUrl;
-            document.getElementById('testQuestion').value = randomQuestion;
         }
 
         // Clear results
