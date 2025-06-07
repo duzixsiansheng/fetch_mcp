@@ -38,48 +38,48 @@ class MCPFetchClient {
                 this.showError(result.error);
             }
         } catch (error) {
-            this.showError('网络错误: ' + error.message);
+            this.showError('error: ' + error.message);
         }
     }
 
     showLoading() {
         this.submitBtn.disabled = true;
-        this.submitBtn.textContent = '处理中...';
+        this.submitBtn.textContent = 'processing...';
         this.resultSection.style.display = 'block';
         this.resultContent.innerHTML = `
             <div class="loading">
                 <div class="spinner"></div>
-                <span>正在处理您的请求...</span>
+                <span>processing...</span>
             </div>
         `;
     }
 
     showResult(result) {
         this.submitBtn.disabled = false;
-        this.submitBtn.textContent = '分析内容';
+        this.submitBtn.textContent = 'content';
         
         this.resultContent.innerHTML = `
             <div class="result-header">
-                <h3>分析结果</h3>
-                <span class="status-complete">完成</span>
+                <h3>result</h3>
+                <span class="status-complete">done</span>
             </div>
             <div class="result-text">${result.answer}</div>
             <div class="result-meta">
                 <strong>URL:</strong> ${result.url}<br>
-                <strong>处理时间:</strong> ${new Date(result.timestamp).toLocaleString()}
+                <strong>time:</strong> ${new Date(result.timestamp).toLocaleString()}
             </div>
         `;
     }
 
     showError(message) {
         this.submitBtn.disabled = false;
-        this.submitBtn.textContent = '分析内容';
+        this.submitBtn.textContent = 'content';
         this.resultSection.style.display = 'block';
         
         this.resultContent.innerHTML = `
             <div class="result-header">
-                <h3>错误</h3>
-                <span class="status-error">失败</span>
+                <h3>error</h3>
+                <span class="status-error">fail</span>
             </div>
             <div class="result-text error">${message}</div>
         `;
