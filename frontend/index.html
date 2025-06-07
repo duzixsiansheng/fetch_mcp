@@ -134,6 +134,10 @@
             background: linear-gradient(45deg, #ffc107, #fd7e14);
         }
 
+        .btn-contact-test {
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+        }
+
         .quick-tests {
             display: flex;
             flex-wrap: wrap;
@@ -281,6 +285,19 @@
             border-color: #667eea;
         }
 
+        .preset-item.contact-test {
+            background: linear-gradient(135deg, #fff3e0 0%, #e8f5e8 100%);
+            border-color: #ff9800;
+            border-width: 2px;
+        }
+
+        .preset-item.contact-test:hover {
+            background: linear-gradient(135deg, #ffe0b2 0%, #c8e6c9 100%);
+            border-color: #f57c00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
         .clear-btn {
             background: #dc3545;
             float: right;
@@ -288,7 +305,7 @@
             font-size: 12px;
         }
 
-        /* 新增：处理步骤样式 */
+        /* 处理步骤样式 */
         .processing-steps {
             padding: 0;
         }
@@ -394,7 +411,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             gap: 12px;
             margin-top: 8px;
         }
@@ -419,6 +436,155 @@
             font-size: 16px;
             font-weight: 600;
             color: #333;
+        }
+
+        /* 联系信息显示样式 */
+        .contact-info-display {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid #2196f3;
+            margin: 16px 0;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+        }
+
+        .contact-info-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(33, 150, 243, 0.2);
+        }
+
+        .contact-info-header h5 {
+            margin: 0;
+            color: #1976d2;
+            font-size: 18px;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .contact-info-status {
+            background: #4caf50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .contact-section {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #2196f3;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .contact-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .contact-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-section-title {
+            display: flex;
+            align-items: center;
+            margin: 0 0 12px 0;
+            color: #1976d2;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .contact-section-icon {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .contact-items {
+            display: grid;
+            gap: 8px;
+        }
+
+        .contact-item {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 14px;
+            color: #495057;
+            position: relative;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .contact-item:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1976d2;
+        }
+
+        .contact-item-text {
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .contact-item-copy {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .contact-item-copy:hover {
+            background: #1976d2;
+        }
+
+        .contact-empty {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .contact-enhancement-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            color: #856404;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-enhancement-notice.enhanced {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .contact-enhancement-notice .icon {
+            margin-right: 8px;
+            font-size: 16px;
         }
 
         @media (max-width: 768px) {
@@ -465,6 +631,8 @@
                     <button class="btn btn-success" onclick="checkStatus()">检查状态</button>
                     <button class="btn btn-success" onclick="checkDomains()">查看域名</button>
                     <button class="btn btn-warning" onclick="testConnectivity()">连接测试</button>
+                    <button class="btn btn-contact-test" onclick="testContactDetection()">联系信息测试</button>
+                    <button class="btn btn-contact-test" onclick="testRealContactPage()" style="background: linear-gradient(45deg, #4caf50, #2196f3);">真实联系页面</button>
                 </div>
             </div>
 
@@ -505,6 +673,22 @@
                     <div class="preset-item" onclick="usePreset('https://stackoverflow.com/questions/tagged/javascript', 'JavaScript相关的热门问题有哪些？')">
                         <strong>StackOverflow</strong><br>
                         <small>编程问答网站</small>
+                    </div>
+                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/microsoft/vscode', '如何联系这个项目的维护者？')">
+                        <strong>🧪 GitHub 联系方式</strong><br>
+                        <small>测试开源项目联系信息</small>
+                    </div>
+                    <div class="preset-item contact-test" onclick="usePreset('https://stackoverflow.com/contact', '网站的联系方式是什么？')">
+                        <strong>🧪 StackOverflow 联系页面</strong><br>
+                        <small>真实联系信息页面测试</small>
+                    </div>
+                    <div class="preset-item contact-test" onclick="usePreset('https://github.com/contact', '如何联系GitHub支持团队？')">
+                        <strong>🧪 GitHub 官方联系</strong><br>
+                        <small>官方联系信息测试</small>
+                    </div>
+                    <div class="preset-item contact-test" onclick="usePreset('https://bbc.com/news/help/default/contact_us/questions', 'BBC的联系方式有哪些？')">
+                        <strong>🧪 BBC 联系页面</strong><br>
+                        <small>媒体机构联系信息</small>
                     </div>
                 </div>
             </div>
@@ -559,7 +743,169 @@
             }
         }
 
-        // 添加结果到界面 - 更新版本支持显示 MCP 和 LLM 结果
+        // 生成联系信息显示HTML
+        function generateContactInfoDisplay(contactInfo, metadata) {
+            if (!contactInfo) {
+                return `<div class="contact-empty">未检测到联系信息</div>`;
+            }
+
+            const hasEmails = contactInfo.emails && contactInfo.emails.length > 0;
+            const hasPhones = contactInfo.phones && contactInfo.phones.length > 0;
+            const hasOther = contactInfo.other && contactInfo.other.length > 0;
+
+            if (!hasEmails && !hasPhones && !hasOther) {
+                return `<div class="contact-empty">未找到有效的联系信息</div>`;
+            }
+
+            let html = `
+                <div class="contact-info-display">
+                    <div class="contact-info-header">
+                        <span class="contact-section-icon">📞</span>
+                        <h5>提取到的联系信息</h5>
+                        <span class="contact-info-status">${metadata.contactEnhanced ? '已增强分析' : '仅供参考'}</span>
+                    </div>
+            `;
+
+            // 邮箱地址
+            if (hasEmails) {
+                html += `
+                    <div class="contact-section">
+                        <div class="contact-section-title">
+                            <span class="contact-section-icon">📧</span>
+                            邮箱地址 (${contactInfo.emails.length}个)
+                        </div>
+                        <div class="contact-items">
+                            ${contactInfo.emails.map(email => `
+                                <div class="contact-item">
+                                    <span class="contact-item-text">${email}</span>
+                                    <button class="contact-item-copy" onclick="copyToClipboard('${email}')">复制</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 电话号码
+            if (hasPhones) {
+                html += `
+                    <div class="contact-section">
+                        <div class="contact-section-title">
+                            <span class="contact-section-icon">📞</span>
+                            电话号码 (${contactInfo.phones.length}个)
+                        </div>
+                        <div class="contact-items">
+                            ${contactInfo.phones.map(phone => `
+                                <div class="contact-item">
+                                    <span class="contact-item-text">${phone}</span>
+                                    <button class="contact-item-copy" onclick="copyToClipboard('${phone}')">复制</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 其他联系信息
+            if (hasOther) {
+                html += `
+                    <div class="contact-section">
+                        <div class="contact-section-title">
+                            <span class="contact-section-icon">📝</span>
+                            其他联系信息 (${contactInfo.other.length}条)
+                        </div>
+                        <div class="contact-items">
+                            ${contactInfo.other.map(info => `
+                                <div class="contact-item">
+                                    <span class="contact-item-text">${info.trim()}</span>
+                                    <button class="contact-item-copy" onclick="copyToClipboard('${info.trim()}')">复制</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 增强通知
+            html += `
+                <div class="contact-enhancement-notice ${metadata.contactEnhanced ? 'enhanced' : ''}">
+                    <span class="icon">${metadata.contactEnhanced ? '✅' : '💡'}</span>
+                    ${metadata.contactEnhanced 
+                        ? '这些联系信息已被用于增强LLM分析，提供更准确的回答。'
+                        : '这些联系信息仅供参考，如需详细分析请询问具体的联系方式问题。'
+                    }
+                </div>
+            `;
+
+            html += `</div>`;
+            return html;
+        }
+
+        // 复制到剪贴板
+        function copyToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showCopySuccess();
+                }).catch(err => {
+                    console.error('复制失败:', err);
+                    fallbackCopyTextToClipboard(text);
+                });
+            } else {
+                fallbackCopyTextToClipboard(text);
+            }
+        }
+
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopySuccess();
+            } catch (err) {
+                console.error('复制失败:', err);
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function showCopySuccess() {
+            // 创建临时提示
+            const toast = document.createElement('div');
+            toast.textContent = '✅ 已复制到剪贴板';
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4caf50;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 6px;
+                z-index: 10000;
+                font-size: 14px;
+                font-weight: 600;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                transition: all 0.3s ease;
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 2000);
+        }
+
+        // 添加结果到界面
         function addResult(title, data, isError = false, processingTime = null) {
             testCounter++;
             const container = document.getElementById('resultsContainer');
@@ -594,7 +940,7 @@
                                 </div>
                                 <div class="raw-content">
                                     <details>
-                                        <summary>查看 MCP 获取的原始内容 (点击展开)</summary>
+                                        <summary>查看获取的原始内容 (点击展开)</summary>
                                         <div class="content-preview">
                                             <p><strong>注意：</strong>这是${metadata.mcpUsed ? 'MCP fetch 工具' : '备用 fetch 方案'}从网页提取的${metadata.mcpUsed ? 'Markdown' : '纯文本'}格式内容，已去除 HTML 标签和噪音。</p>
                                             <div class="mock-mcp-content">
@@ -611,6 +957,21 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        ${data.data.contactInfo && metadata.contactInfoFound ? `
+                        <div class="step-divider">⬇️</div>
+                        
+                        <div class="step-section">
+                            <h4 class="step-title">📞 联系信息提取结果</h4>
+                            <div class="step-content">
+                                <div class="step-meta">
+                                    <span class="meta-item">${metadata.contactEnhanced ? '✅ 已应用到LLM分析' : '📋 仅供参考'}</span>
+                                    <span class="meta-item">🔍 询问类型: ${metadata.isContactQuestion ? '联系方式询问' : '常规询问'}</span>
+                                </div>
+                                ${generateContactInfoDisplay(data.data.contactInfo, metadata)}
+                            </div>
+                        </div>
+                        ` : ''}
                         
                         <div class="step-divider">⬇️</div>
                         
@@ -640,6 +1001,14 @@
                                     <div class="stat-item">
                                         <span class="stat-label">内容压缩比</span>
                                         <span class="stat-value">${Math.round((data.data.answer.length / metadata.contentLength) * 100)}%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">联系信息检测</span>
+                                        <span class="stat-value">${metadata.contactInfoFound ? '✅ 已提取' : '❌ 未找到'}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">增强分析</span>
+                                        <span class="stat-value">${metadata.contactEnhanced ? '✅ 已应用' : '❌ 未应用'}</span>
                                     </div>
                                     <div class="stat-item">
                                         <span class="stat-label">处理时间</span>
@@ -728,6 +1097,72 @@
             } catch (error) {
                 addResult('域名列表', { error: error.message }, true, error.processingTime);
             }
+        }
+
+        // 检查联系信息功能
+        async function testContactDetection() {
+            // 使用多个测试用例来展示联系信息检测
+            const testCases = [
+                {
+                    url: 'https://stackoverflow.com/contact',
+                    question: '网站的联系方式是什么？',
+                    description: 'StackOverflow 联系页面'
+                },
+                {
+                    url: 'https://github.com/contact',
+                    question: '如何联系GitHub支持团队？',
+                    description: 'GitHub 官方联系'
+                },
+                {
+                    url: 'https://example.com',
+                    question: '这个网站的联系方式是什么？',
+                    description: 'Example.com (可能无联系信息)'
+                }
+            ];
+
+            const btn = document.getElementById('fetchBtn');
+            const originalText = btn.innerHTML;
+            
+            // 随机选择一个测试用例
+            const testData = testCases[Math.floor(Math.random() * testCases.length)];
+            
+            // 填充测试数据
+            document.getElementById('testUrl').value = testData.url;
+            document.getElementById('testQuestion').value = testData.question;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"><span class="spinner"></span>测试联系信息检测...</span>';
+
+            try {
+                const { data, processingTime } = await makeRequest('/ask', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        url: testData.url,
+                        question: testData.question
+                    })
+                });
+
+                addResult(`联系信息检测测试: ${testData.description}`, data, !data.success, processingTime);
+            } catch (error) {
+                addResult('联系信息检测测试', { error: error.message }, true, error.processingTime);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // 专门测试真实联系信息页面
+        async function testRealContactPage() {
+            const testData = {
+                url: 'https://stackoverflow.com/contact',
+                question: '这个页面上有哪些联系方式？请详细列出所有联系信息。'
+            };
+
+            document.getElementById('testUrl').value = testData.url;
+            document.getElementById('testQuestion').value = testData.question;
+            
+            // 自动触发测试
+            await testFetch();
         }
 
         // 内容获取测试

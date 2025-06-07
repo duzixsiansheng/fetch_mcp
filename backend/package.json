@@ -1,12 +1,33 @@
 {
+  "name": "mcp-fetch-backend",
+  "version": "1.0.0",
+  "description": "Backend service for MCP Fetch application",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "debug": "node debug-server.js"
   },
   "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "dotenv": "^16.3.1",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
-  }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "mcp",
+    "fetch",
+    "web-scraping",
+    "llm",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT"
 }

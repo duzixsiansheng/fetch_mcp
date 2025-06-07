@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const { RateLimiterMemory } = require('rate-limiter-flexible');
 const { spawn } = require('child_process');
 const fs = require('fs').promises;
 const path = require('path');
@@ -36,19 +35,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// 速率限制配置
-const rateLimiter = new RateLimiterMemory({
-  keyPrefix: 'api_limit',
-  points: 20,
-  duration: 60,
-});
-
-const strictRateLimiter = new RateLimiterMemory({
-  keyPrefix: 'strict_limit',
-  points: 5,
-  duration: 60,
-});
-
 // URL 白名单配置
 const WHITELISTED_DOMAINS = [
   'wikipedia.org',
@@ -62,8 +48,13 @@ const WHITELISTED_DOMAINS = [
   'hackernews.com',
   'techcrunch.com',
   'bbc.com',
+  'bbc.co.uk',
   'cnn.com',
-  'reuters.com'
+  'reuters.com',
+  'microsoft.com',
+  'google.com',
+  'anthropic.com',
+  'openai.com'
 ];
 
 // 日志记录
@@ -158,6 +149,15 @@ function hasContactInformation(content) {
   return hasEmail || hasPhone || hasContactKeywords;
 }
 
+// 检查联系信息是否有效
+function hasValidContactInfo(contactInfo) {
+  if (!contactInfo) return false;
+  
+  return (contactInfo.emails && contactInfo.emails.length > 0) ||
+         (contactInfo.phones && contactInfo.phones.length > 0) ||
+         (contactInfo.other && contactInfo.other.length > 0);
+}
+
 // 提取联系信息
 function extractContactInformation(content) {
   if (!content || typeof content !== 'string') {
@@ -170,30 +170,65 @@ function extractContactInformation(content) {
     other: []
   };
   
+  // 更准确的邮箱正则表达式
   const emailPattern = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
   const emails = content.match(emailPattern);
   if (emails) {
-    contactInfo.emails = [...new Set(emails)];
+    // 过滤掉一些常见的非真实邮箱
+    const validEmails = emails.filter(email => 
+      !email.includes('noreply') && 
+      !email.includes('example.com') && 
+      !email.includes('test.com') &&
+      !email.includes('placeholder')
+    );
+    contactInfo.emails = [...new Set(validEmails)];
   }
   
-  const phonePattern = /(\+?1?[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/g;
-  const phones = content.match(phonePattern);
-  if (phones) {
-    contactInfo.phones = [...new Set(phones)];
+  // 更全面的电话号码匹配
+  const phonePatterns = [
+    /(\+?1?[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/g, // 美国格式
+    /(\+\d{1,3}[-.\s]?)?(\d{3,4}[-.\s]?\d{3,4}[-.\s]?\d{3,4})/g, // 国际格式
+    /(\d{3}[-.\s]?\d{4}[-.\s]?\d{4})/g, // 中国手机号
+    /(\d{3,4}[-.\s]?\d{7,8})/g // 中国固话
+  ];
+  
+  let allPhones = [];
+  phonePatterns.forEach(pattern => {
+    const matches = content.match(pattern);
+    if (matches) {
+      allPhones = allPhones.concat(matches);
+    }
+  });
+  
+  if (allPhones.length > 0) {
+    // 过滤掉明显不是电话号码的数字
+    const validPhones = allPhones.filter(phone => {
+      const cleanPhone = phone.replace(/\D/g, '');
+      return cleanPhone.length >= 7 && cleanPhone.length <= 15;
+    });
+    contactInfo.phones = [...new Set(validPhones)];
   }
   
+  // 查找联系相关的句子
   const sentences = content.split(/[.!?\n]+/);
   const contactSentences = sentences.filter(sentence => {
     const sentenceLower = sentence.toLowerCase();
-    return sentenceLower.includes('contact') || 
+    return (sentenceLower.includes('contact') || 
            sentenceLower.includes('联系') ||
+           sentenceLower.includes('support') ||
+           sentenceLower.includes('help') ||
            sentenceLower.includes('phone') ||
            sentenceLower.includes('email') ||
-           sentenceLower.includes('address');
+           sentenceLower.includes('address') ||
+           sentenceLower.includes('call') ||
+           sentenceLower.includes('reach') ||
+           sentenceLower.includes('mailto:')) &&
+           sentence.trim().length > 20 && // 至少20个字符
+           sentence.trim().length < 200; // 不超过200个字符
   });
   
   if (contactSentences.length > 0) {
-    contactInfo.other = contactSentences.slice(0, 3);
+    contactInfo.other = contactSentences.slice(0, 5).map(s => s.trim()); // 最多5条
   }
   
   const hasAnyContact = contactInfo.emails.length > 0 || 
@@ -201,6 +236,15 @@ function extractContactInformation(content) {
                        contactInfo.other.length > 0;
   
   return hasAnyContact ? contactInfo : null;
+}
+
+// 检查联系信息是否有效
+function hasValidContactInfo(contactInfo) {
+  if (!contactInfo) return false;
+  
+  return (contactInfo.emails && contactInfo.emails.length > 0) ||
+         (contactInfo.phones && contactInfo.phones.length > 0) ||
+         (contactInfo.other && contactInfo.other.length > 0);
 }
 
 // 官方 MCP Fetch 工具集成
@@ -499,9 +543,12 @@ function processContent(rawContent, maxLength = 4000) {
 // LLM API 调用
 async function callLLM(content, question, contactInfo = null) {
   let prompt;
+  let useContactEnhancement = false;
   
-  if (contactInfo && isContactQuestion(question)) {
-    console.log('🔍 询问联系方式且检测到联系信息，使用增强 prompt');
+  // 只有当确实提取到联系信息且用户询问联系方式时，才使用增强prompt
+  if (contactInfo && isContactQuestion(question) && hasValidContactInfo(contactInfo)) {
+    console.log('🔍 询问联系方式且检测到有效联系信息，使用增强 prompt');
+    useContactEnhancement = true;
     
     let contactSection = '\n\n===== 提取的联系信息 =====\n';
     
@@ -528,7 +575,7 @@ ${contactSection}
 
 请提供准确、完整的联系方式信息，用中文回答：`;
   } else {
-    console.log('🔍 非联系方式询问或无联系信息，使用标准 prompt');
+    console.log('🔍 使用标准 prompt（无联系信息增强）');
     prompt = `请基于以下网页内容回答用户的问题。请提供准确、有用且简洁的回答。
 
 网页内容：
@@ -631,18 +678,19 @@ ${content}
 function generateFallbackResponse(content, question, contactInfo = null) {
   const questionLower = question.toLowerCase();
   
-  if (isContactQuestion(question) && contactInfo) {
+  // 只有在确实有有效联系信息且询问联系方式时才使用联系信息回答
+  if (isContactQuestion(question) && contactInfo && hasValidContactInfo(contactInfo)) {
     let response = '根据网页内容，找到以下联系方式：\n\n';
     
-    if (contactInfo.emails.length > 0) {
+    if (contactInfo.emails && contactInfo.emails.length > 0) {
       response += `📧 邮箱: ${contactInfo.emails.join(', ')}\n`;
     }
     
-    if (contactInfo.phones.length > 0) {
+    if (contactInfo.phones && contactInfo.phones.length > 0) {
       response += `📞 电话: ${contactInfo.phones.join(', ')}\n`;
     }
     
-    if (contactInfo.other.length > 0) {
+    if (contactInfo.other && contactInfo.other.length > 0) {
       response += `📝 其他信息: ${contactInfo.other.join(' ')}\n`;
     }
     
@@ -684,8 +732,6 @@ app.post('/api/ask', async (req, res) => {
   const startTime = Date.now();
   
   try {
-    await strictRateLimiter.consume(req.ip);
-    
     const { url, question } = req.body;
     
     if (!url || !question) {
@@ -743,13 +789,20 @@ app.post('/api/ask', async (req, res) => {
     
     const isAsking = isContactQuestion(question);
     let contactInfo = null;
+    let contactInfoExtracted = false;
     
     if (isAsking) {
       console.log('🔍 用户询问联系方式，开始检测联系信息');
       const hasContact = hasContactInformation(processedContent);
       if (hasContact) {
         contactInfo = extractContactInformation(processedContent);
-        console.log('✅ 检测到联系信息:', contactInfo);
+        if (hasValidContactInfo(contactInfo)) {
+          contactInfoExtracted = true;
+          console.log('✅ 检测到有效联系信息:', contactInfo);
+        } else {
+          console.log('⚠️ 检测到联系模式但未提取到有效联系信息');
+          contactInfo = null;
+        }
       } else {
         console.log('❌ 未在内容中找到联系信息');
       }
@@ -784,8 +837,9 @@ app.post('/api/ask', async (req, res) => {
           answerLength: answer.length,
           source: mcpUsed ? 'MCP Fetch' : 'Fallback Fetch',
           isContactQuestion: isAsking,
-          hasContactInfo: !!contactInfo,
-          contactEnhanced: !!(isAsking && contactInfo)
+          hasContactInfo: contactInfoExtracted,
+          contactEnhanced: contactInfoExtracted && isAsking,
+          contactInfoFound: !!contactInfo
         }
       }
     });
@@ -798,14 +852,6 @@ app.post('/api/ask', async (req, res) => {
       processingTime,
       stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
-    
-    if (error.remainingPoints !== undefined) {
-      return res.status(429).json({
-        success: false,
-        error: '请求过于频繁，请稍后再试',
-        retryAfter: Math.ceil(error.msBeforeNext / 1000)
-      });
-    }
     
     if (error.message.includes('timeout')) {
       return res.status(408).json({
@@ -833,8 +879,6 @@ app.post('/api/ask', async (req, res) => {
 // 状态检查端点
 app.get('/api/status', async (req, res) => {
   try {
-    await rateLimiter.consume(req.ip);
-    
     const status = {
       status: 'running',
       timestamp: new Date().toISOString(),
@@ -860,12 +904,6 @@ app.get('/api/status', async (req, res) => {
     
     res.json(status);
   } catch (error) {
-    if (error.remainingPoints !== undefined) {
-      return res.status(429).json({
-        error: '请求过于频繁'
-      });
-    }
-    
     res.status(500).json({
       error: '状态检查失败'
     });
@@ -875,8 +913,6 @@ app.get('/api/status', async (req, res) => {
 // 获取允许的域名列表
 app.get('/api/domains', async (req, res) => {
   try {
-    await rateLimiter.consume(req.ip);
-    
     res.json({
       success: true,
       data: {
@@ -885,12 +921,6 @@ app.get('/api/domains', async (req, res) => {
       }
     });
   } catch (error) {
-    if (error.remainingPoints !== undefined) {
-      return res.status(429).json({
-        error: '请求过于频繁'
-      });
-    }
-    
     res.status(500).json({
       error: '获取域名列表失败'
     });
