@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Fetch 本地测试界面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="url"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="url"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #ffc107, #fd7e14);
+        }
+
+        .quick-tests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .status-bar {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-online {
+            background: #28a745;
+        }
+
+        .status-offline {
+            background: #dc3545;
+        }
+
+        .status-checking {
+            background: #ffc107;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .results-area {
+            grid-column: span 2;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e9ecef;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .result-item.error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .result-item.success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .result-time {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .result-content {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e1e5e9;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .preset-urls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .preset-item {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .preset-item.selected {
+            background: #e7f3ff;
+            border-color: #667eea;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            float: right;
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        /* 新增：处理步骤样式 */
+        .processing-steps {
+            padding: 0;
+        }
+
+        .step-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .step-title {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            margin: 0;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .step-content {
+            padding: 16px;
+        }
+
+        .step-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .meta-item {
+            background: #e7f3ff;
+            color: #0066cc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .step-divider {
+            text-align: center;
+            font-size: 20px;
+            margin: 10px 0;
+            color: #667eea;
+        }
+
+        .raw-content details {
+            margin-top: 8px;
+        }
+
+        .raw-content summary {
+            cursor: pointer;
+            padding: 8px 12px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .raw-content summary:hover {
+            background: #dee2e6;
+        }
+
+        .content-preview {
+            background: #f1f3f4;
+            border-radius: 4px;
+            padding: 12px;
+            border-left: 3px solid #667eea;
+        }
+
+        .mock-mcp-content {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #495057;
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            margin-top: 8px;
+        }
+
+        .mock-mcp-content p {
+            margin: 6px 0;
+            line-height: 1.4;
+        }
+
+        .llm-answer {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 16px;
+        }
+
+        .answer-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .stat-item {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .results-area {
+                grid-column: span 1;
+            }
+            
+            .step-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 MCP Fetch 测试工具</h1>
+            <p>本地前端界面 - 连接后端 API 进行内容获取测试</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 状态检查区域 -->
+            <div class="section">
+                <h2>🔍 服务器状态</h2>
+                <div class="status-bar">
+                    <div>
+                        <span class="status-indicator status-checking" id="statusIndicator"></span>
+                        <span id="statusText">检查中...</span>
+                    </div>
+                    <button class="btn btn-secondary" onclick="checkServerStatus()">刷新状态</button>
+                </div>
+                
+                <div class="quick-tests">
+                    <button class="btn btn-success" onclick="checkStatus()">检查状态</button>
+                    <button class="btn btn-success" onclick="checkDomains()">查看域名</button>
+                    <button class="btn btn-warning" onclick="testConnectivity()">连接测试</button>
+                </div>
+            </div>
+
+            <!-- 内容获取测试区域 -->
+            <div class="section">
+                <h2>📄 内容获取测试</h2>
+                
+                <div class="form-group">
+                    <label for="testUrl">测试 URL:</label>
+                    <input type="url" id="testUrl" placeholder="https://example.com" value="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="testQuestion">问题:</label>
+                    <textarea id="testQuestion" placeholder="输入你想问的问题...">这个网站是关于什么的？</textarea>
+                </div>
+
+                <button class="btn" onclick="testFetch()" id="fetchBtn">
+                    📡 获取内容
+                </button>
+                <button class="btn btn-secondary" onclick="fillRandomTest()">🎲 随机测试</button>
+
+                <!-- 预设测试 -->
+                <h3 style="margin-top: 25px; margin-bottom: 15px; color: #333;">快速测试</h3>
+                <div class="preset-urls">
+                    <div class="preset-item" onclick="usePreset('https://example.com', '这个网站的主要内容是什么？')">
+                        <strong>Example.com</strong><br>
+                        <small>基础测试网站</small>
+                    </div>
+                    <div class="preset-item" onclick="usePreset('https://en.wikipedia.org/wiki/Artificial_intelligence', '什么是人工智能？')">
+                        <strong>Wikipedia AI</strong><br>
+                        <small>人工智能相关内容</small>
+                    </div>
+                    <div class="preset-item" onclick="usePreset('https://github.com/microsoft/vscode', '这个项目是做什么的？')">
+                        <strong>GitHub VSCode</strong><br>
+                        <small>开源项目信息</small>
+                    </div>
+                    <div class="preset-item" onclick="usePreset('https://stackoverflow.com/questions/tagged/javascript', 'JavaScript相关的热门问题有哪些？')">
+                        <strong>StackOverflow</strong><br>
+                        <small>编程问答网站</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 结果显示区域 -->
+            <div class="results-area">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>📋 测试结果</h2>
+                    <button class="btn clear-btn" onclick="clearResults()">清空结果</button>
+                </div>
+                <div id="resultsContainer">
+                    <div style="text-align: center; color: #6c757d; padding: 40px;">
+                        暂无测试结果，点击上方按钮开始测试
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        let testCounter = 0;
+
+        // 页面加载时自动检查服务器状态
+        window.addEventListener('load', function() {
+            checkServerStatus();
+        });
+
+        // 检查服务器连接状态
+        async function checkServerStatus() {
+            const indicator = document.getElementById('statusIndicator');
+            const text = document.getElementById('statusText');
+            
+            indicator.className = 'status-indicator status-checking';
+            text.textContent = '检查中...';
+
+            try {
+                const response = await fetch(`${API_BASE}/status`, { 
+                    method: 'GET',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    indicator.className = 'status-indicator status-online';
+                    text.textContent = '服务器在线 ✅';
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                indicator.className = 'status-indicator status-offline';
+                text.textContent = '服务器离线 ❌';
+            }
+        }
+
+        // 添加结果到界面 - 更新版本支持显示 MCP 和 LLM 结果
+        function addResult(title, data, isError = false, processingTime = null) {
+            testCounter++;
+            const container = document.getElementById('resultsContainer');
+            
+            // 清空提示文字
+            if (container.children.length === 1 && container.firstElementChild.style.textAlign === 'center') {
+                container.innerHTML = '';
+            }
+
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result-item ${isError ? 'error' : 'success'}`;
+            
+            const timeStr = new Date().toLocaleTimeString();
+            const processingStr = processingTime ? ` (${processingTime}ms)` : '';
+            
+            let contentHtml = '';
+            
+            // 检查是否是内容获取的响应，如果是则分别显示 MCP 和 LLM 结果
+            if (data && data.success && data.data && data.data.answer && data.data.metadata) {
+                const metadata = data.data.metadata;
+                
+                contentHtml = `
+                    <div class="processing-steps">
+                        <div class="step-section">
+                            <h4 class="step-title">${metadata.mcpUsed ? '📡 MCP Fetch 原始结果' : '🔄 Fallback Fetch 原始结果'}</h4>
+                            <div class="step-content">
+                                <div class="step-meta">
+                                    <span class="meta-item">${metadata.mcpUsed ? '✅ MCP 获取成功' : '🔄 备用方案获取'}</span>
+                                    <span class="meta-item">📄 内容长度: ${metadata.contentLength} 字符</span>
+                                    <span class="meta-item">🌐 URL: ${data.data.url}</span>
+                                    <span class="meta-item">🔧 数据源: ${metadata.source || (metadata.mcpUsed ? 'MCP Fetch' : 'Fallback Fetch')}</span>
+                                </div>
+                                <div class="raw-content">
+                                    <details>
+                                        <summary>查看 MCP 获取的原始内容 (点击展开)</summary>
+                                        <div class="content-preview">
+                                            <p><strong>注意：</strong>这是${metadata.mcpUsed ? 'MCP fetch 工具' : '备用 fetch 方案'}从网页提取的${metadata.mcpUsed ? 'Markdown' : '纯文本'}格式内容，已去除 HTML 标签和噪音。</p>
+                                            <div class="mock-mcp-content">
+                                                ${data.data.rawContent ? 
+                                                    data.data.rawContent.substring(0, 1000).replace(/\n/g, '<br>') + (data.data.rawContent.length > 1000 ? '<br><br><em>[内容过长，仅显示前1000字符]</em>' : '') :
+                                                    `<p>🔧 ${metadata.mcpUsed ? 'MCP fetch 工具' : '备用 fetch 方案'}已将网页转换为结构化格式</p>
+                                                     <p>📊 处理了 ${metadata.contentLength} 字符的内容</p>
+                                                     <p>🧹 自动过滤了广告、导航栏等无关内容</p>
+                                                     <p>📝 保留了文章主体、表格、链接等核心信息</p>`
+                                                }
+                                            </div>
+                                        </details>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-divider">⬇️</div>
+                        
+                        <div class="step-section">
+                            <h4 class="step-title">🤖 LLM 智能分析结果</h4>
+                            <div class="step-content">
+                                <div class="step-meta">
+                                    <span class="meta-item">🎯 问题: "${data.data.question}"</span>
+                                    <span class="meta-item">📝 回答长度: ${data.data.answer.length} 字符</span>
+                                </div>
+                                <div class="llm-answer">
+                                    <div class="answer-text">${data.data.answer}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="step-divider">⬇️</div>
+                        
+                        <div class="step-section">
+                            <h4 class="step-title">📊 处理统计</h4>
+                            <div class="step-content">
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-label">总处理时间</span>
+                                        <span class="stat-value">${processingTime || metadata.processingTime}ms</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">内容压缩比</span>
+                                        <span class="stat-value">${Math.round((data.data.answer.length / metadata.contentLength) * 100)}%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">处理时间</span>
+                                        <span class="stat-value">${metadata.timestamp ? new Date(metadata.timestamp).toLocaleString() : timeStr}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // 其他类型的结果（状态检查、错误等）
+                contentHtml = `<div class="result-content">${JSON.stringify(data, null, 2)}</div>`;
+            }
+            
+            resultDiv.innerHTML = `
+                <div class="result-header">
+                    <div class="result-title">#${testCounter} ${title}</div>
+                    <div class="result-time">${timeStr}${processingStr}</div>
+                </div>
+                ${contentHtml}
+            `;
+            
+            container.insertBefore(resultDiv, container.firstChild);
+            
+            // 限制结果数量
+            if (container.children.length > 5) {
+                container.removeChild(container.lastChild);
+            }
+        }
+
+        // 通用 API 请求函数
+        async function makeRequest(endpoint, options = {}) {
+            const startTime = Date.now();
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                const data = await response.json();
+                const processingTime = Date.now() - startTime;
+                
+                return { response, data, processingTime };
+            } catch (error) {
+                const processingTime = Date.now() - startTime;
+                throw { ...error, processingTime };
+            }
+        }
+
+        // 测试连接
+        async function testConnectivity() {
+            try {
+                const { data, processingTime } = await makeRequest('/status');
+                addResult('连接测试', { 
+                    status: '连接成功',
+                    serverStatus: data.status,
+                    uptime: data.uptime + '秒'
+                }, false, processingTime);
+            } catch (error) {
+                addResult('连接测试', { 
+                    status: '连接失败',
+                    error: error.message 
+                }, true, error.processingTime);
+            }
+        }
+
+        // 检查状态
+        async function checkStatus() {
+            try {
+                const { data, processingTime } = await makeRequest('/status');
+                addResult('状态检查', data, false, processingTime);
+            } catch (error) {
+                addResult('状态检查', { error: error.message }, true, error.processingTime);
+            }
+        }
+
+        // 检查域名列表
+        async function checkDomains() {
+            try {
+                const { data, processingTime } = await makeRequest('/domains');
+                addResult('域名列表', data, false, processingTime);
+            } catch (error) {
+                addResult('域名列表', { error: error.message }, true, error.processingTime);
+            }
+        }
+
+        // 内容获取测试
+        async function testFetch() {
+            const url = document.getElementById('testUrl').value.trim();
+            const question = document.getElementById('testQuestion').value.trim();
+            const btn = document.getElementById('fetchBtn');
+
+            if (!url || !question) {
+                addResult('输入验证', { error: 'URL 和问题都是必需的' }, true);
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"><span class="spinner"></span>处理中...</span>';
+
+            try {
+                const { data, processingTime } = await makeRequest('/ask', {
+                    method: 'POST',
+                    body: JSON.stringify({ url, question })
+                });
+
+                addResult(`内容获取: ${new URL(url).hostname}`, data, !data.success, processingTime);
+            } catch (error) {
+                addResult('内容获取', { error: error.message }, true, error.processingTime);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '📡 获取内容';
+            }
+        }
+
+        // 使用预设
+        function usePreset(url, question) {
+            document.getElementById('testUrl').value = url;
+            document.getElementById('testQuestion').value = question;
+            
+            // 高亮选中的预设
+            document.querySelectorAll('.preset-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.target.closest('.preset-item').classList.add('selected');
+        }
+
+        // 填充随机测试
+        function fillRandomTest() {
+            const urls = [
+                'https://example.com',
+                'https://en.wikipedia.org/wiki/JavaScript',
+                'https://github.com/nodejs/node',
+                'https://stackoverflow.com/questions/tagged/python'
+            ];
+            
+            const questions = [
+                '这个网站的主要内容是什么？',
+                '网站上有哪些重要信息？',
+                '这个页面讲的是什么主题？',
+                '总结一下这个网页的核心内容'
+            ];
+
+            const randomUrl = urls[Math.floor(Math.random() * urls.length)];
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+
+            document.getElementById('testUrl').value = randomUrl;
+            document.getElementById('testQuestion').value = randomQuestion;
+        }
+
+        // 清空结果
+        function clearResults() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+                <div style="text-align: center; color: #6c757d; padding: 40px;">
+                    结果已清空，点击上方按钮开始新的测试
+                </div>
+            `;
+            testCounter = 0;
+        }
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                testFetch();
+            }
+        });
+    </script>
+</body>
+</html>
